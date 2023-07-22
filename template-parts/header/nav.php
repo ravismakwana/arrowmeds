@@ -54,8 +54,10 @@ $header_menus = wp_get_nav_menu_items($header_menu_id);
                         ?>
                     </ul><?php
                 }
-                echo get_search_form();
-            ?>
+                ?>
+            <div class="offer-zone">
+                <a href="#" class="badge text-bg-danger fs-14 text-decoration-none fw-normal">Offer Zone</a>
+            </div>
 		</div>
 	</div>
 </nav>

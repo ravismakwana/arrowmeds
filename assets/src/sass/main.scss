@@ -22,19 +22,31 @@ $container-max-widths: (
   xl: 1130px,
   xxl: 1170px,
 );
+$theme-colors: (
+  "primary":  #0c6452,
+  "danger": #ae1421,
+  "success":  #0c6452,
+);
+$btn-padding-x: 20px;
 @import "~bootstrap/scss/bootstrap";
-body {
+.btn-primary {
+  &:hover {
+    background-color: #fff;
+    border-color: var(--bs-btn-hover-bg);
+    color: var(--bs-btn-hover-bg);
+    text-decoration: none;
+  }
+}
+body, .fs-14 {
   font-size: 14px;
   font-family: "bitterregular";
 }
 .header-top-bar-main {
     transition: all 0.5s;
-    background: #fff;
-    border-bottom: 1px solid #f1f1f1;
   .block-currency-wrapper {
     display: inline-block !important;
-    margin: 0px 0 0 0;
-    padding: 7px 10px;
+    margin: 0;
+    padding: 7px 0;
     ul.list-inline {
       display: flex;
       align-items: center;
@@ -44,45 +56,24 @@ body {
         display: inline-block;
         padding-right: 5px;
         padding-left: 5px;
-        a {
-          color: #333;
-          text-decoration: none;
+        &:first-child {
+          padding-left: 0;
         }
         .bookmark-btn {
-          background-color: #1fc0a0;
-          border-radius: 50px;
-          cursor: pointer;
           button {
-            background-color: #cd1b29;
-            border-radius: 50%;
-            border: none;
-            width: 25px;
-            height: 26px;
-            padding: 0;
+            width: 23px;
+            height: 23px;
           }
           span {
             padding-right: 8px;
             color: #fff;
           }
         }
-        .track-btn {
-          a {
-            background-color: #1fc0a0;
-            border-radius: 50px;
-            color: #fff !important;
-            padding: 3px 8px;
-          }
-        }
       }
     }
   }
   .toplinks {
-    line-height: normal;
-    padding: 7px 0 0;
-    display: inline-block;
-    float: right;
-    letter-spacing: 0.5px;
-    .head_whatsapp {
+    .head_whatsapp   {
       margin-bottom: 0 !important;
     }
     #menu-toplinks {

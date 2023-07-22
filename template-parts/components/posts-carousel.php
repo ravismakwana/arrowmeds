@@ -38,7 +38,8 @@ $post_query = new WP_Query( $args );
 						<div class="card-body">
 							<?php the_title('<h3 class="card-title">', '</h5>'); ?></h3>
 							<p class="card-text"><?php asgard_the_excerpt(); ?></p>
-							<a href="<?php echo esc_url(get_the_permalink()); ?>" class="btn btn-primary"><?php esc_html_e('View more', 'asgard'); ?></a>
+							<a href="<?php echo esc_url(get_the_permalink()); ?>" class="btn btn-primary rounded-pill"><?php esc_html_e('View more', 'asgard'); ?></a>
+                            <button class="btn btn-feature btn-danger">Feature</button>
 						</div>
 					</div>
 					</div>
