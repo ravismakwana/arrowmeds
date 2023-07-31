@@ -9,7 +9,7 @@
 $menu_class     = \ASGARD_THEME\Inc\Menus::get_instance();
 $header_menu_id = $menu_class->get_menu_id( 'asgard-main-menu' );
 ?>
-<div class="header-top-bar-main border-bottom border-opacity-10 border-light border-success">
+<div class="header-top-bar-main border-bottom border-opacity-20 border-light border-success">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center text-sm-center text-md-start">
@@ -17,10 +17,11 @@ $header_menu_id = $menu_class->get_menu_id( 'asgard-main-menu' );
                     <ul class="list-inline list-unstyled mx-0">
                         <li class="">
                             <span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">US Toll Free:&nbsp;</span>
-                            <a href="tel:+1(877)925-1112" class="text-decoration-none fs-14 text-black">+1(877) 925-1112</a></li>
+                            <a href="tel:+1(877)925-1112" class="text-decoration-none fs-14 text-black" aria-label="US Toll Free">+1(877)
+                                925-1112</a></li>
                         <li class="d-none d-sm-inline-block">
                             <a href="javascript:void(0);"
-                               class="d-inline-flex justify-content-center align-items-center badge text-bg-primary fs-14 text-decoration-none rounded-pill fw-normal"
+                               class="bookmark-btn d-inline-flex justify-content-center align-items-center badge text-bg-primary fs-14 text-decoration-none rounded-pill fw-normal"
                                onclick="bookmarkmsg()">
                                 Bookmark
                             </a>
@@ -33,7 +34,8 @@ $header_menu_id = $menu_class->get_menu_id( 'asgard-main-menu' );
                         <li>
                             <div class="track-btn">
                                 <a href="https://arrowmeds.aftership.com/" target="_blank"
-                                   class="badge text-bg-primary fs-14 text-decoration-none rounded-pill fw-normal">Track Order</a>
+                                   class="badge text-bg-primary fs-14 text-decoration-none rounded-pill fw-normal">Track
+                                    Order</a>
                             </div>
                         </li>
                     </ul>
@@ -74,8 +76,11 @@ $header_menu_id = $menu_class->get_menu_id( 'asgard-main-menu' );
 									$logout_link = wp_logout_url( get_home_url() );
 								}
 								?>
-                                <li class="menu-item"><span><a href="<?php echo esc_url( $logout_link ); ?>"
-                                                               class="text-decoration-none fs-14 text-black">Logout</a></span>
+                                <li class="menu-item">
+                                    <span>
+                                        <a href="<?php echo esc_url( $logout_link ); ?>"
+                                           class="text-decoration-none fs-14 text-black">Logout</a>
+                                    </span>
                                 </li>
 								<?php
 							} else {

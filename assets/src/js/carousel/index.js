@@ -1,7 +1,7 @@
 (function( $ ){
     class SlickSlider {
         constructor() {
-            this.initSlider();
+            // this.initSlider();
         }
 
         initSlider(){

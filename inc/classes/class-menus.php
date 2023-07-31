@@ -24,6 +24,7 @@ class Menus {
 		register_nav_menus( [
 			'asgard-main-menu' => esc_html__( 'Main Menu', 'asgard' ),
 			'asgard-footer-menu'  => esc_html__( 'Footer Menu', 'asgard' ),
+			'canvas-menu'  => esc_html__( 'Canvas Menu', 'asgard' ),
 		] );
 	}
 

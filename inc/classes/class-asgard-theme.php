@@ -23,6 +23,9 @@ class ASGARD_THEME {
 		Register_Post_Types::get_instance();
 		Register_Taxonomies::get_instance();
 		Archive_Settings::get_instance();
+		Asgard_Woocommerce::get_instance();
+		Asgard_Shortcodes::get_instance();
+		Store_Information::get_instance();
 		$this->setup_hooks();
 	}
 
@@ -37,8 +40,8 @@ class ASGARD_THEME {
 		add_theme_support('title-tag');
 
 		add_theme_support( 'custom-logo', [
-			'height'      => 26,
-			'width'       => 130,
+			'height'      => 53,
+			'width'       => 230,
 			'flex-height' => true,
 			'flex-width'  => true,
 			'header-text' => [ 'site-title', 'site-description' ],
