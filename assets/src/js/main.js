@@ -1,5 +1,5 @@
-import './clock';
-import './carousel';
+// import './clock';
+// import './carousel';
 import './menu';
 import './woo';
 import './posts/loadmore';
