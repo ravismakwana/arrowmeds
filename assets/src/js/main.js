@@ -1,5 +1,7 @@
-import './clock';
-import './carousel';
+// import './clock';
+// import './carousel';
+import './menu';
+import './woo';
 import './posts/loadmore';
 
 // Styles
@@ -11,3 +13,5 @@ import '../img/patterns/bg.jpeg';
 import '../img/patterns/c1-150x150.jpeg';
 import '../img/patterns/c2-150x150.jpeg';
 import '../img/patterns/c3-150x150.jpeg';
+import '../img/email.webp';
+import '../img/payment.webp';

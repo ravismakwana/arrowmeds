@@ -4,34 +4,95 @@
  *
  * @package Asgard
  */
-
 ?>
 
 </div>
 <footer>
-    <div class="footer-widget">
+    <div class="footer-top bg-black bg-opacity-75 py-3">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 col-sm-6">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s
+                <div class="col-12 col-md-6 align-items-center justify-content-lg-start justify-content-center my-1">
+					<?php
+					if ( is_active_sidebar( 'footer-newsletter' ) ) {
+						dynamic_sidebar( 'footer-newsletter' );
+					}
+					?>
                 </div>
-                <div class="col-md-4 col-sm-6">
-	                <?php dynamic_sidebar('sidebar-2'); ?>
+                <div class="col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-lg-end my-1">
+                    <a href="<?php echo home_url('/arrowmeds-app/'); ?>" >
+                    <svg width="180" height="53.333"><use href="#app-logo"></use></svg>
+                    </a>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <div class="social-links">
-                        <ul class="d-flex">
-                            <li class="list-unstyled">
-                                <a href="https://www.facebook.com/" ><svg width="48" height="48" fill="red"><use href="#icon-facebook"></use></svg></a>
-                            </li>
-                            <li class="list-unstyled">
-                                <a href="https://www.twitter.com/" ><svg width="48" height="48"><use href="#icon-twitter"></use></svg></a>
-                            </li>
-                            <li class="list-unstyled">
-                                <a href="https://www.linkedin.com/" ><svg width="48" height="48"><use href="#icon-linkedin"></use></svg></a>
-                            </li>
-                        </ul>
-                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-widget bg-dark pt-sm-4 pt-md-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 border-lg-end pt-4 pt-md-5 pb-md-5 mb-4 mb-md-0">
+					<?php if ( is_active_sidebar( 'footer-1' ) ) { ?>
+						<?php dynamic_sidebar( 'footer-1' ); ?>
+					<?php } ?>
+                </div>
+                <div class="col-lg-3 col-sm-6 border-lg-end pt-md-5 pb-md-5 mb-4 mb-md-0">
+					<?php dynamic_sidebar( 'footer-2' ); ?>
+                </div>
+                <div class="col-lg-3 col-sm-6 border-lg-end pt-lg-5 pb-md-5 mb-4 mb-md-0">
+					<?php dynamic_sidebar( 'footer-3' ); ?>
+                </div>
+                <div class="col-lg-3 col-sm-6 pt-lg-5 pb-md-5 mb-4 mb-md-0">
+					<?php dynamic_sidebar( 'footer-4' ); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="social-payment border-top bg-dark py-sm-4 py-2">
+        <div class="container">
+            <div class="row">
+                <div class="social-links col-sm-6 py-2">
+                    <ul class="d-flex m-0 p-0 justify-content-sm-start justify-content-center">
+                        <li class="list-unstyled">
+                            <a href="https://www.facebook.com/arrowmedsus/" target="_blank">
+                                <svg width="35" height="35">
+                                    <use href="#icon-facebook"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="list-unstyled">
+                            <a href="https://twitter.com/arrowmeds" target="_blank">
+                                <svg width="35" height="35">
+                                    <use href="#icon-twitter"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="list-unstyled">
+                            <a href="https://www.linkedin.com/" target="_blank">
+                                <svg width="35" height="35">
+                                    <use href="#icon-pinterest"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="list-unstyled">
+                            <a href="https://www.instagram.com/arrowmedsus/" target="_blank">
+                                <svg width="35" height="35" class="p1">
+                                    <use href="#icon-instagram"></use>
+                                </svg>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="payment-links col-sm-6 py-2 text-sm-end text-center">
+					<?php $paymentUrl = get_template_directory_uri() . '/assets/build/src/img/payment.webp'; ?>
+                    <img src="<?php echo esc_url( $paymentUrl ); ?>" height="35" width="240" alt="payment logo"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright bg-black bg-opacity-75 text-center text-white text-opacity-75 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 fs-12">Copyright © <?php echo date( 'Y' ); ?> Arrowmeds.com All Rights Reserved.
                 </div>
             </div>
         </div>
@@ -41,7 +102,19 @@
 
 <?php
 wp_footer();
-get_template_part('template-parts/content','svgs');
+get_template_part( 'template-parts/content', 'svgs' );
 ?>
+<div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasAM" aria-labelledby="offcanvasAMLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasAMLabel">All Categories</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+		<?php
+		echo asgard_canvas_menu();
+		?>
+
+    </div>
+</div>
 </body>
 </html>
