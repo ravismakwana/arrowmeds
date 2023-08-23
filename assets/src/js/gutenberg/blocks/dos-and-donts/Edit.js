@@ -1,5 +1,5 @@
-import { InnerBlocks } from "@wordpress/block-editor";
-import { blockColumn } from "./template";
+import { InnerBlocks } from '@wordpress/block-editor';
+import { blockColumn } from './template';
 
 const ALLOWED_BLOCKS = ['core/group'];
 
@@ -14,13 +14,12 @@ const INNER_BLOCK_TEMPLATE = [
 	],
 ];
 const Edit = () => {
-
 	return (
 		<div className="asgard-dos-and-donts">
 			<InnerBlocks
-				template={ INNER_BLOCK_TEMPLATE }
-				templateLock={ true }
-				allowedBlocks={ ALLOWED_BLOCKS }
+				template={INNER_BLOCK_TEMPLATE}
+				templateLock={true}
+				allowedBlocks={ALLOWED_BLOCKS}
 			/>
 		</div>
 	);

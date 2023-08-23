@@ -27,16 +27,21 @@ class Assets {
 	public function register_styles() {
 //		wp_register_style('bootstrap', ASGARD_BUILD_LIB_URI.'/css/bootstrap.min.css', [], false, 'all');
 		wp_register_style( 'main-css', ASGARD_BUILD_CSS_URI . '/main.css', [], filemtime( ASGARD_BUILD_CSS_DIR_PATH . '/main.css' ), 'all' );
+		wp_register_style( 'single-css', ASGARD_BUILD_CSS_URI . '/single.css', [], filemtime( ASGARD_BUILD_CSS_DIR_PATH . '/single.css' ), 'all' );
 //		wp_register_style( 'slick-css', ASGARD_BUILD_LIB_URI . '/css/slick/slick.css', [], false, 'all' );
 //		wp_register_style( 'slick-theme-css', ASGARD_BUILD_LIB_URI . '/css/slick/slick-theme.css', [ 'slick-css' ], false, 'all' );
 
 //		wp_enqueue_style('bootstrap');
 		wp_enqueue_style( 'main-css' );
+		if(is_single()) {
+			wp_enqueue_style( 'single-css' );
+		}
 //		wp_enqueue_style( 'slick-css' );
 //		wp_enqueue_style( 'slick-theme-css' );
 	}
 
 	public function register_scripts() {
+
 		wp_register_script( 'main', ASGARD_BUILD_JS_URI . '/main.js', [
 			'jquery',
 		], filemtime( ASGARD_BUILD_JS_DIR_PATH . '/main.js' ), true );
@@ -56,7 +61,8 @@ class Assets {
 		wp_localize_script( 'main', 'ajax_object',
 			[
 				'ajax_url'   => admin_url( 'admin-ajax.php' ),
-				'ajax_nonce' => wp_create_nonce( 'loadmore_posts_nonce' )
+				'ajax_nonce' => wp_create_nonce( 'loadmore_posts_nonce' ),
+				'checkout_url' => get_permalink(wc_get_page_id('checkout'))
 			]
 		);
 	}
@@ -105,13 +111,28 @@ class Assets {
 			filemtime( ASGARD_BUILD_CSS_DIR_PATH . '/blocks.css' ),
 			'all'
 		);
-
+		if(is_checkout()) {
+			wp_enqueue_script(
+				'asgard-upload-js',
+				ASGARD_BUILD_LIB_URI.'/js/jquery.uploadfile.min.js',
+				$js_dependencies,
+				'1.0',
+				true
+			);
+			wp_enqueue_style(
+				'asgard-upload-css',
+				ASGARD_BUILD_LIB_URI.'/css/uploadfile.css',
+				$css_dependencies,
+				'1.0',
+				'all'
+			);
+		}
 	}
 
 	public function dequeue_block_styles() {
 
 
-		if ( is_front_page() ) {
+		if ( is_front_page()) {
 			// Remove CSS on the front end.
 			wp_dequeue_style( 'wp-block-library' );
 
@@ -136,6 +157,23 @@ class Assets {
 				wp_deregister_style( 'dashicons' );
 			}
 //			wp_deregister_style( 'woocommerce-inline' );
+		}
+		if(is_product()) {
+			wp_dequeue_script( 'wc-add-to-cart-variation' );
+			wp_dequeue_script( 'jquery-blockui' );
+
+//			wp_dequeue_style( 'woocommerce-general' );
+			wp_dequeue_style( 'woocommerce-layout' );
+			wp_dequeue_style( 'woocommerce-smallscreen' );
+			wp_dequeue_style( 'woocommerce-smallscreen' );
+
+			wp_dequeue_style( 'wc-blocks-style' );
+		}
+		if(is_shop() || is_product_category() ) {
+//			wp_dequeue_style( 'woocommerce-general' );
+			wp_dequeue_style( 'woocommerce-layout' );
+			wp_dequeue_style( 'woocommerce-smallscreen' );
+			wp_dequeue_style( 'woocommerce-smallscreen' );
 		}
 	}
 }

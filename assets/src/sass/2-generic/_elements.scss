@@ -264,16 +264,6 @@ li > ol {
     #TABLE
 \*------------------------------------*/
 
-table {
-	max-width: 100%;
-	background-color: transparent;
-	border-collapse: collapse;
-	border-spacing: 0;
-
-	@include mq( medium ) {
-		max-width: 350px;
-	}
-}
 
 /* Button
 --------------------------------------------- */

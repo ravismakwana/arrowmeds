@@ -356,7 +356,7 @@ if ( ! function_exists( 'asgard_mini_cart' ) ) {
 									?>
                                     <li class="item<?php if ( $cnt - 1 == $i ) { ?>last<?php } ?> d-inline-block mb-3 border-bottom border-light-subtle pb-3 w-100">
                                         <div class="item-inner d-flex">
-                                            <a class="product-image flex-shrink-0"
+                                            <a class="product-image flex-shrink-0 border border-primary border-opacity-25"
                                                href="<?php echo esc_url( $product_permalink ); ?>"
                                                title="<?php echo esc_html( $product_name ); ?>"> <?php echo str_replace( array(
 													'http:',

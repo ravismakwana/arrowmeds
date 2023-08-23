@@ -1,1 +1,1 @@
-export default "../src/library/fonts/bitterre/bitter-italic-webfont.svg";
+export default "../../src/library/fonts/bitterre/bitter-italic-webfont.svg";

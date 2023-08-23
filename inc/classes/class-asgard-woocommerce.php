@@ -8,6 +8,8 @@
 namespace ASGARD_THEME\Inc;
 
 use ASGARD_THEME\Inc\Traits\Singleton;
+use WC_Product_Variable;
+use WC_AJAX;
 
 class Asgard_Woocommerce {
 	use Singleton;
@@ -29,7 +31,84 @@ class Asgard_Woocommerce {
 			$this,
 			'asgard_add_class_product_thumbnail'
 		], 10, 6 );
+		add_filter( 'woocommerce_add_to_cart_fragments', [
+			$this,
+			'asgard_cart_count_fragments'
+		], 10, 1 );
+		add_filter( 'use_block_editor_for_post_type', [
+			$this,
+			'enable_gutenberg_for_product_page'
+		], 10, 2 );
+
+
 		add_filter( 'woocommerce_variable_price_html', [ $this, 'asgard_custom_variation_price' ], 10, 2 );
+		add_action( 'woocommerce_single_product_summary', [ $this, 'woocommerce_add_attributes' ], 21 );
+		add_action( 'woocommerce_after_single_product_summary', [ $this, 'display_variation_in_table_format' ], 5 );
+		add_action( 'woocommerce_share', [ $this, 'product_share_single_product_page' ], 10 );
+		add_action( 'wp_ajax_nopriv_woocommerce_add_variation_to_cart', [
+			$this,
+			'asgard_add_variation_to_cart_ajax'
+		], 10 );
+		add_action( 'wp_ajax_woocommerce_add_variation_to_cart', [ $this, 'asgard_add_variation_to_cart_ajax' ], 10 );
+		add_action( 'woocommerce_after_single_product_summary', [
+			$this,
+			'asgard_woocommerce_template_product_checkout_button'
+		], 8 );
+		add_action( 'woocommerce_before_single_product_summary', [ $this, 'asgard_woocommerce_show_product_images' ] );
+		add_action( 'woocommerce_before_single_product_summary', [
+			$this,
+			'asgard_single_product_images_and_summary_div_start'
+		], 5 );
+		add_action( 'woocommerce_after_single_product_summary', [
+			$this,
+			'asgard_single_product_images_and_summary_div_end'
+		], 1 );
+		add_action( 'woocommerce_after_single_product_summary', [
+			$this,
+			'asgard_woocommerce_output_product_content_and_reviews'
+		], 10 );
+		add_filter( 'woocommerce_product_tabs', [
+			$this,
+			'bbloomer_remove_product_tabs'
+		], 9999 );
+		add_filter( 'woocommerce_form_field', [ $this, 'asgard_remove_checkout_optional_text' ], 10, 4 );
+		add_filter( 'woocommerce_account_menu_item_classes', [ $this, 'asgard_custom_wc_account_menu_item_classes' ], 10, 2 );
+		add_filter( 'woocommerce_product_loop_title_classes', [ $this, 'asgard_woocommerce_product_loop_title_classes' ], 10, 1 );
+		add_filter( 'woocommerce_loop_add_to_cart_link', [ $this, 'asgard_woocommerce_loop_add_to_cart_link' ], 10, 2 );
+		add_action( 'woocommerce_after_order_notes', [
+			$this,
+			'asgard_woocommerce_checkout_page_add_medical_condition_custom_checkout_field'
+		], 10 );
+        add_action( 'woocommerce_checkout_update_order_meta', [
+			$this,
+			'asgard_woocommerce_checkout_page_update_medical_condition_custom_checkout_field'
+		], 10, 1 );
+        add_action( 'woocommerce_admin_order_data_after_billing_address', [
+			$this,
+			'asgard_woocommerce_checkout_page_display_medical_condition_custom_checkout_field'
+		], 10, 1 );
+
+		add_action( 'wp_ajax_upload_prescription', [ $this, 'asgard_upload_prescription' ], 10 );
+		add_action( 'wp_ajax_nopriv_upload_prescription', [ $this, 'asgard_upload_pcription' ], 10 );
+		add_action( 'wp_ajax_delete_prescription', [ $this, 'asgard_delete_prescription_action' ], 10 );
+		add_action( 'wp_ajax_nopriv_delete_prescription', [ $this, 'asgard_delete_prescription_action' ], 10 );
+		add_action( 'woocommerce_thankyou', [ $this, 'asgard_display_thankyou_popup' ], 10 );
+		add_action( 'woocommerce_before_shop_loop_item', [ $this, 'asgard_woocommerce_before_shop_loop_item_add_div' ], 5 );
+		add_action( 'woocommerce_after_shop_loop_item', [ $this, 'asgard_woocommerce_after_shop_loop_item_end_div' ], 15 );
+
+		add_action( 'woocommerce_after_shop_loop_item', [ $this, 'asgard_add_start_div_for_bootstrap_card' ], 6 );
+		add_action( 'woocommerce_after_shop_loop_item', [ $this, 'asgard_add_end_div_for_bootstrap_card' ], 14 );
+		add_action( 'product_cat_add_form_fields', [ $this, 'asgard_taxonomy_add_new_category_description_field' ], 10, 1 );
+		add_action( 'product_cat_edit_form_fields', [ $this, 'asgard_taxonomy_add_edit_category_description_field' ], 10, 1 );
+		add_action( 'edited_product_cat', [ $this, 'asgard_save_taxonomy_custom_meta' ], 10, 1 );
+		add_action( 'create_product_cat', [ $this, 'asgard_save_taxonomy_custom_meta' ], 10, 1 );
+		add_action( 'create_product_cat', [ $this, 'asgard_save_taxonomy_custom_meta' ], 10, 1 );
+		add_action( 'woocommerce_after_main_content', [ $this, 'asgard_display_content_on_archive_page' ], 10 );
+		add_action( 'woocommerce_register_form_start', [ $this, 'asgard_add_registration_fields' ], 10 );
+		add_action( 'woocommerce_register_form', [ $this, 'asgard_add_registration_password_confirm_field' ], 10 );
+		add_filter( 'woocommerce_registration_errors', [ $this, 'asgard_validate_registration_fields' ], 10, 3);
+        add_action( 'woocommerce_created_customer', [ $this, 'asgard_save_registration_fields' ], 10, 1 );
+        add_action( 'woocommerce_after_checkout_validation', [ $this, 'asgard_woocommerce_confirm_password_validation_on_checkout_page' ], 10, 2 );
 	}
 
 	public function asgard_woocommerce_header_add_to_cart_fragment() {
@@ -78,15 +157,19 @@ class Asgard_Woocommerce {
 								) :
 
 									$product_name = apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key );
-									$thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key );
+									$thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( array(
+										100,
+										100
+									) ), $cart_item, $cart_item_key );
 									$product_price     = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
 									$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 									$cnt               = sizeof( WC()->cart->get_cart() );
 									$rowstatus         = $cnt % 2 ? 'odd' : 'even';
+									//print_r($thumbnail);
 									?>
                                     <li class="item<?php if ( $cnt - 1 == $i ) { ?>last<?php } ?> d-inline-block mb-3 border-bottom border-light-subtle pb-3 w-100">
                                         <div class="item-inner d-flex">
-                                            <a class="product-image flex-shrink-0"
+                                            <a class="product-image flex-shrink-0 border border-primary border-opacity-25"
                                                href="<?php echo esc_url( $product_permalink ); ?>"
                                                title="<?php echo esc_html( $product_name ); ?>"> <?php echo str_replace( array(
 													'http:',
@@ -194,27 +277,38 @@ class Asgard_Woocommerce {
 	public function asgard_custom_render_product_block( $html, $data, $post ) {
 
 		return '<li class="wc-block-grid__product">
-                <div class="border border-primary-subtle rounded-4">
-				<a href="' . $data->permalink . '" class="wc-block-grid__product-link">
+                <div class="border border-primary-subtle rounded-4 p-3">
+				<a href="' . $data->permalink . '" class="wc-block-grid__product-link text-decoration-none">
 					' . $data->image . '
 					<span class="fs-14 text-decoration-none text-black">' . $data->title . '</span>
 				</a>
 				' . $data->price . '
-				<a href="' . $data->permalink . '" class="btn btn-primary rounded-pill mb-3" aria-label="view detail button">View detail</a>
+				<a href="' . $data->permalink . '" class="fs-14 btn btn-primary rounded-pill mb-3" aria-label="view detail button">View detail</a>
 				</div>
 			</li>';
 	}
 
 	public function asgard_add_class_product_thumbnail( $image, $product, $size, $attr, $placeholder, $image_id ) {
 		// Add your custom class here
-		$custom_class = 'rounded-top-4';
 
-		// Append the custom class to the existing classes
-		if ( strpos( $image, 'class="' ) !== false ) {
-			$image = str_replace( 'class="', 'class="' . $custom_class . ' ', $image );
+		if ( is_product() ) {
+			$custom_class = 'img-fluid img-thumbnail mx-auto d-block border border-primary border-opacity-25';
+			// Append the custom class to the existing classes
+			if ( strpos( $image, 'class="' ) !== false ) {
+				$image = str_replace( 'class="', 'class="' . $custom_class . ' ', $image );
+			} else {
+				$image = str_replace( '<img', '<img class="' . $custom_class . '"', $image );
+			}
 		} else {
-			$image = str_replace( '<img', '<img class="' . $custom_class . '"', $image );
+			$custom_class = 'rounded-top-4';
+			// Append the custom class to the existing classes
+			if ( strpos( $image, 'class="' ) !== false ) {
+				$image = str_replace( 'class="', 'class="' . $custom_class . ' ', $image );
+			} else {
+				$image = str_replace( '<img', '<img class="' . $custom_class . '"', $image );
+			}
 		}
+
 
 		return $image;
 	}
@@ -224,28 +318,809 @@ class Asgard_Woocommerce {
 		 * Only display price per piece for WooCommerce variable products
 		 */
 		$product_variations = $product->get_available_variations();
-		$min_price = [];
+		$min_price          = [];
 
-		foreach ($product_variations as $key => $product_variation) {
-			$attribute = array_values($product_variation['attributes']);
-			$tablets = explode(' ', $attribute[0]);
-			$min_price_value = floatval($tablets[0]); // Convert the string to a float
-			if ($min_price_value > 0) {
+		foreach ( $product_variations as $key => $product_variation ) {
+			$attribute       = array_values( $product_variation['attributes'] );
+			$tablets         = explode( ' ', $attribute[0] );
+			$min_price_value = floatval( $tablets[0] ); // Convert the string to a float
+			if ( $min_price_value > 0 ) {
 				$min_price[] = $min_price_value;
 			}
 		}
 
-		if (empty($min_price)) {
+		if ( empty( $min_price ) ) {
 			// Handle the case when all values in $min_price are zero or empty
 			// For example, set a default price or display an error message.
 			return 'No valid variation prices found.';
 		}
 
-		$prices = array($product->get_variation_price('max', true), $product->get_variation_price('min', true));
-		$price = max($prices);
-		$unit_price = $price / max($min_price);
-		$final_unit = round(number_format($unit_price, 2), 2);
+		$prices     = array(
+			$product->get_variation_price( 'max', true ),
+			$product->get_variation_price( 'min', true )
+		);
+		$price      = max( $prices );
+		$unit_price = $price / max( $min_price );
+		$final_unit = round( number_format( $unit_price, 2 ), 2 );
 
 		return 'Just $' . $final_unit . ' /Piece';
 	}
+
+	public function woocommerce_add_attributes() {
+		global $product;
+		$attributes = $product->get_attributes();
+		?>
+        <div class="table-responsive">
+        <table class="shop_attributes table table-striped border border-primary border-opacity-10 mt-2">
+			<?php if ( $product->get_sku() ) { ?>
+                <tr>
+                    <th class="table-light">Product Code:</th>
+                    <td class="p-2"><?php echo $product->get_sku(); ?></td>
+                </tr>
+				<?php
+			}
+			foreach ( $attributes as $attribute ) :
+				$visible = $attribute->get_visible();
+				if ( $visible ) {
+					?>
+                    <tr>
+                        <th class="table-light"><?php echo wc_attribute_label( $attribute->get_name() ); ?></th>
+                        <td class="p-2"><em><?php
+								$values = array();
+
+								if ( $attribute->is_taxonomy() ) {
+									$attribute_taxonomy = $attribute->get_taxonomy_object();
+									$attribute_values   = wc_get_product_terms( $product->get_id(), $attribute->get_name(), array( 'fields' => 'all' ) );
+
+									foreach ( $attribute_values as $attribute_value ) {
+										$value_name = esc_html( $attribute_value->name );
+
+										if ( $attribute_taxonomy->attribute_public ) {
+											$values[] = '<a href="' . esc_url( get_term_link( $attribute_value->term_id, $attribute->get_name() ) ) . '" rel="tag">' . $value_name . '</a>';
+										} else {
+											$values[] = $value_name;
+										}
+									}
+								} else {
+									$values = $attribute->get_options();
+
+									foreach ( $values as &$value ) {
+										$value = make_clickable( esc_html( $value ) );
+									}
+								}
+
+								echo apply_filters( 'woocommerce_attribute', wptexturize( implode( ', ', $values ) ), $attribute, $values );
+								?></em></td>
+                    </tr>
+					<?php
+				}
+			endforeach;
+			?></table></div><?php
+	}
+
+	public function display_variation_in_table_format() {
+		global $product;
+		// Get current product ID
+		$current_product_id = $product->get_id();
+
+		$upsell_ids = $product->get_upsell_ids();
+		if ( ! empty( $current_product_id ) ) {
+			// added current products Id into Upsell products.
+			array_unshift( $upsell_ids, $current_product_id );
+		}
+		if ( ! empty( $upsell_ids ) ) {
+			foreach ( $upsell_ids as $upsell_id ) {
+				$this->display_current_and_upsell_product_variation_in_table_format( $upsell_id );
+			}
+		}
+
+	}
+
+	public function display_current_and_upsell_product_variation_in_table_format( $id ) {
+		?>
+        <div class="product-variation-display-section table-responsive">
+			<?php
+			$product = new WC_Product_Variable( $id );
+			// get the product variations
+			$product_variations = $product->get_available_variations();
+			$attributes         = $product->get_attributes();
+			foreach ( $attributes as $key => $attribute ) {
+				if ( $attribute->get_variation() ) {
+					$attribute_name = $attribute->get_name();
+				}
+			}
+			if ( ! empty( $product_variations ) ) {
+				?>
+                <table class="product_type table align-middle table-borderless mb-0">
+                    <tbody>
+                    <tr>
+                        <td class="p_image d-lg-table-cell d-md-block d-block">
+                            <div class="product_img">
+                                <a class="thumbnail" href="#">
+                                    <img src="<?php echo $product_variations[0]['image']['gallery_thumbnail_src']; ?>"
+                                         title="<?php echo $product_variations[0]['image']['title']; ?>"
+                                         alt="<?php echo $product_variations[0]['image']['alt']; ?>"
+                                         class="img-fluid img-thumbnail mx-auto d-block border border-primary border-opacity-25"
+                                         width="<?php echo $product_variations[0]['image']['gallery_thumbnail_src_w']; ?>">
+                                </a>
+                            </div>
+                        </td>
+                        <td class="block d-lg-table-cell d-md-block d-block px-0">
+                            <table class="text-center table footable footable-1 table-bordered table-hover border border-primary border-opacity-25"
+                                   data-toggle-column="last" product-id="<?php echo $id; ?>">
+                                <thead>
+                                <tr class="row-title">
+                                    <th colspan="5" class="bg-primary-subtle"><h2
+                                                class="variation-product-title h5 mb-0 py-1 text-primary"><?php echo $product->get_title() . ' - ' . $attribute_name; ?></h2>
+                                    </th>
+                                </tr>
+                                <tr class="footable-header">
+                                    <th class="footable-first-visible text-primary"><?php echo $attribute_name; ?></th>
+                                    <th class="text-primary">Price</th>
+                                    <th class="hide-mobile text-primary d-none d-lg-table-cell">Price/unit</th>
+                                    <th class="text-primary">Quantity</th>
+                                    <th class="footable-last-visible text-primary">Add To Cart</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+								<?php
+								foreach ( $product_variations as $key => $product_variation ) {
+//                                    echo '<pre>';
+//                                    print_r($product_variation);
+//                                    echo '</pre>';
+									$attribute = array_values( $product_variation['attributes'] );
+									?>
+                                    <tr>
+                                        <td class="footable-first-visible align-middle"><?php echo( $attribute[0] ); ?></td>
+                                        <td class="align-middle"><?php echo get_woocommerce_currency_symbol() . $product_variation['display_price']; ?></td>
+                                        <td class="hide-mobile align-middle text-danger d-none d-lg-table-cell">
+											<?php
+											$tablets    = explode( ' ', $attribute[0] );
+											$unit_price = $product_variation['display_price'] / $tablets[0];
+											$final_unit = round( number_format( $unit_price, 2 ), 2 );
+											echo '$' . $final_unit . ' /Piece';
+											?>
+                                        </td>
+                                        <td class="align-middle">
+                                            <select class="form-control select-qty form-select form-select-sm border border-primary border-opacity-50"
+                                                    aria-label="Select Qty">
+                                                <option selected="selected">1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </td>
+                                        <td class="footable-last-visible align-middle d-table-cell justify-content-center align-items-center">
+											<?php
+											$attr  = '';
+											$attrs = $product_variation['attributes'];
+											foreach ( $attrs as $key => $attr ) {
+												if ( ! empty( $attr ) ) {
+													$attr = $key . '=' . $attr;
+												} else {
+													$attr .= '&' . $key . '=' . $attr;
+												}
+											}
+											$key        = '_stock_status';
+											$checkStock = get_post_meta( $product_variation["variation_id"], $key, true );
+											if ( ! empty( $checkStock ) && $checkStock == 'outofstock' ) {
+												?><span class="text-danger">Out of stock</span><?php
+											} else {
+												?>
+                                            <button type="button"
+                                                    class="btn-add-to-cart-ajax btn btn-link btn-color-orange 1-261 p-0"
+                                                    data-product_id="<?php echo abs( $id ); ?>"
+                                                    data-variation_id="<?php echo abs( $product_variation["variation_id"] ); ?>"
+                                                    data-quantity="1" data-variation="<?php echo $attr; ?>">
+                                                    <svg class="d-block mx-auto m-0" width="25" height="25"
+                                                         fill="var(--bs-danger)">
+                                                        <use href="#icon-cart"></use>
+                                                    </svg>
+                                                </button><?php
+											}
+											?>
+                                            <!--<a href="<?php echo get_the_permalink() . '?add-to-cart=' . $id . '&quantity=1&variation_id=' . $product_variation["variation_id"] . '&' . $attr . ''; ?>" class="btn btn-primary btn-add-to-cart-ajax">add to cart</a>-->
+                                        </td>
+                                    </tr>
+									<?php
+								}
+								?>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+				<?php
+			}
+			?>
+        </div>
+		<?php
+	}
+
+	public function product_share_single_product_page() {
+		global $product;
+		$product_id = $product->get_id();
+		?>
+        <div class="product_share_single d-flex align-items-center">
+            <div class="product_share_title me-2">
+                <h6 class="fs-14 mb-0">Share:</h6>
+            </div>
+            <ul class="product_share_icon list-inline p-0 m-0 list-unstyled">
+                <li class="list-inline-item">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo get_permalink( $product_id ); ?>"
+                       target="_blank">
+                        <svg width="20" height="20" fill="var(--bs-primary)">
+                            <use href="#icon-facebook"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://twitter.com/share?url=<?php echo get_permalink( $product_id ); ?>" target="_blank">
+                        <svg width="20" height="20" fill="var(--bs-primary)">
+                            <use href="#icon-twitter"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://pinterest.com/pin/create/button/?url=<?php echo get_permalink( $product_id ); ?>"
+                       target="_blank">
+                        <svg width="20" height="20" fill="var(--bs-primary)">
+                            <use href="#icon-pinterest"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo get_permalink( $product_id ); ?>"
+                       target="_blank">
+                        <svg width="20" height="20" fill="var(--bs-primary)">
+                            <use href="#icon-linkedin"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://api.whatsapp.com/send?&text=%20<?php echo get_permalink( $product_id ); ?>"
+                       target="_blank">
+                        <svg width="20" height="20" fill="var(--bs-primary)">
+                            <use href="#icon-whatsapp"></use>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+		<?php
+	}
+
+	public function asgard_add_variation_to_cart_ajax() {
+		// Add variation product to the cart using ajax
+
+		$product_id = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['product_id'] ) );
+		$quantity   = empty( $_POST['quantity'] ) ? 1 : wc_stock_amount( $_POST['quantity'] );
+
+		$variation_id = isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : '';
+		$variations   = ! empty( $_POST['variation'] ) ? (array) $_POST['variation'] : '';
+		$variations   = array( $variations[0] => $variations[1] );
+
+		$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations, $cart_item_data );
+
+		if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variations ) ) {
+
+			do_action( 'woocommerce_ajax_added_to_cart', $product_id );
+
+			if ( get_option( 'woocommerce_cart_redirect_after_add' ) == 'yes' ) {
+				wc_add_to_cart_message( $product_id );
+			}
+
+			// Return fragments
+			WC_AJAX::get_refreshed_fragments();
+
+		} else {
+			// If there was an error adding to the cart, send a JSON error response
+			wp_send_json_error( array(
+				'error'   => true,
+				'message' => __( 'Error adding product to cart', 'your-theme-domain' ),
+			) );
+		}
+		die();
+	}
+
+	public function asgard_cart_count_fragments( $fragments ) {
+		$fragments['span.cart-items-count'] = '<span class="cart-items-count">' . count( WC()->cart->get_cart() ) . '</span>';
+
+		$cart_count                                   = count( WC()->cart->get_cart() );
+		$itemClass                                    = ( ( ! empty( $cart_count ) ) && ( $cart_count > 0 ) ) ? 'd-flex' : 'd-none';
+		$fragments['div.button-group-single-product'] = '<div class="button-group-single-product">
+            <div class="check-out-buttons ' . $itemClass . '  align-items-end flex-column">
+				<ul class="list-inline mb-2 p-0 ">
+					<li class="list-inline-item">
+						<a href="' . wc_get_cart_url() . '" class="view-cart btn btn-success  text-decoration-none text-uppercase fs-12">View cart</a>
+					</li>
+					<li class="list-inline-item">
+						<a href=' . wc_get_checkout_url() . '" class="view-checkout btn btn-dark text-decoration-none text-uppercase fs-12">Checkout</a>
+					</li>
+				</ul>
+				<div class="secure-img">
+					<img src="' . ASGARD_BUILD_IMG_URI . '/secure-with-macfee.webp" alt="Secure with macfee" width="229" height="37" class="img-fluid">
+				</div>
+			</div>
+        </div>';
+
+		return $fragments;
+	}
+
+	public function asgard_woocommerce_template_product_checkout_button() {
+		$cart_count = count( WC()->cart->get_cart() );
+		$itemClass  = ( ( ! empty( $cart_count ) ) && ( $cart_count > 0 ) ) ? 'd-flex' : 'd-none';
+		?>
+        <div class="button-group-single-product mb-4">
+            <div class="check-out-buttons <?php echo $itemClass; ?>  align-items-end flex-column">
+                <ul class="list-inline mb-2 p-0 ">
+                    <li class="list-inline-item">
+                        <a href="<?php echo wc_get_cart_url(); ?>"
+                           class="view-cart btn btn-success  text-decoration-none text-uppercase fs-12">View cart</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="<?php echo wc_get_checkout_url(); ?>"
+                           class="view-checkout btn btn-dark text-decoration-none text-uppercase fs-12 ">Checkout</a>
+                    </li>
+                </ul>
+                <div class="secure-img">
+                    <img src="<?php echo ASGARD_BUILD_IMG_URI . '/secure-with-macfee.webp'; ?>" alt="Secure with macfee"
+                         width="229" height="37" class="img-fluid">
+                </div>
+            </div>
+        </div>
+		<?php
+	}
+
+	public function asgard_single_product_images_and_summary_div_start() {
+		echo '<div class="row product-image-plus-summary">';
+	}
+
+	public function asgard_single_product_images_and_summary_div_end() {
+		echo '</div>';
+	}
+
+	public function asgard_woocommerce_show_product_images() {
+		global $product;
+		echo "<div class='col-lg-4 mt-4 order-2 order-lg-1 d-none d-lg-block single-product-image'>" . $product->get_image() . "</div>";
+	}
+
+	public function enable_gutenberg_for_product_page( $can_edit, $post_type ) {
+		if ( $post_type === 'product' ) {
+			return true;
+		}
+
+		return $can_edit;
+	}
+
+	public function asgard_woocommerce_output_product_content_and_reviews() {
+
+		woocommerce_product_description_tab();
+
+		if ( comments_open() || get_comments_number() ) {
+			comments_template();
+		}
+
+	}
+
+	public function asgard_woocommerce_checkout_page_add_medical_condition_custom_checkout_field( $checkout ) {
+		echo '<div class="health-form step-title"><h4>' . __( 'Medical Condition' ) . '</h4>';
+		woocommerce_form_field( 'physician_name', array(
+			'type'        => 'text',
+			'class'       => array( 'physician-name', 'mb-3' ),
+			'label'       => __( "Your Physician's Name: " ),
+			'placeholder' => __( '' ),
+			'maxlength'   => 32,
+			'text-danger'    => false,
+			'label_class' => array( 'form-label fs-14 lh-1' ),
+			'input_class' => array( 'input-text form-control border border-secondary border-opacity-75' ),
+		), $checkout->get_value( 'physician_name' ) );
+
+		woocommerce_form_field( 'physician_phone', array(
+			'type'        => 'tel',
+			'class'       => array( 'physician-phone', 'mb-3' ),
+			'label'       => __( "Physician's Telephone No:" ),
+			'placeholder' => __( '' ),
+			'maxlength'   => 10,
+			'text-danger'    => false,
+			'label_class' => array( 'form-label fs-14 lh-1' ),
+			'input_class' => array( 'input-text form-control border border-secondary border-opacity-75' ),
+		), $checkout->get_value( 'physician_phone' ) );
+
+		woocommerce_form_field( 'drug_allergies', array(
+			'type'        => 'text',
+			'class'       => array( 'drug-allergies', 'mb-3' ),
+			'label'       => __( "Drug Allergies:" ),
+			'placeholder' => __( '' ),
+			'maxlength'   => 32,
+			'text-danger'    => false,
+			'label_class' => array( 'form-label fs-14 lh-1' ),
+			'input_class' => array( 'input-text form-control border border-secondary border-opacity-75' ),
+		), $checkout->get_value( 'drug_allergies' ) );
+		woocommerce_form_field( 'current_medications', array(
+			'type'        => 'text',
+			'class'       => array( 'current-medications', 'mb-3' ),
+			'label'       => __( "Current Medications:" ),
+			'placeholder' => __( '' ),
+			'maxlength'   => 32,
+			'text-danger'    => false,
+			'label_class' => array( 'form-label fs-14 lh-1' ),
+			'input_class' => array( 'input-text form-control border border-secondary border-opacity-75' ),
+		), $checkout->get_value( 'current_medications' ) );
+		woocommerce_form_field( 'current_treatments', array(
+			'type'        => 'text',
+			'class'       => array( 'current-treatments', 'mb-3' ),
+			'label'       => __( "Current Treatments:" ),
+			'placeholder' => __( '' ),
+			'maxlength'   => 32,
+			'text-danger'    => false,
+			'label_class' => array( 'form-label fs-14 lh-1' ),
+			'input_class' => array( 'input-text form-control border border-secondary border-opacity-75' ),
+		), $checkout->get_value( 'current_treatments' ) );
+		echo '<div class="d-flex">';
+		woocommerce_form_field( 'smoke', array(
+			'type'        => 'radio',
+			'class'       => array( 'smoke', 'form-check', 'col' ),
+			'label'       => __( "Do you Smoke?" ),
+			'text-danger'    => false,
+			'default'     => 0,
+			'options'     => array( 'No', 'Yes' ),
+			'label_class' => array( 'fs-14 lh-1 form-check-label flex-fill mt-0' ),
+			'input_class' => array( 'form-check-input border border-secondary border-opacity-75 mt-0 ms-0 me-2' ),
+		), $checkout->get_value( 'smoke' ) );
+		woocommerce_form_field( 'drink_alcohol', array(
+			'type'        => 'radio',
+			'class'       => array( 'drink-alcohol', 'form-check', 'col' ),
+			'label'       => __( "Do you drink Alcohol?" ),
+			'text-danger'    => false,
+			'default'     => 0,
+			'options'     => array( 'No', 'Yes' ),
+			'label_class' => array( 'fs-14 lh-1 form-check-label flex-fill mt-0' ),
+			'input_class' => array( 'form-check-input border border-secondary border-opacity-75 mt-0 ms-0 me-2' ),
+		), $checkout->get_value( 'drink_alcohol' ) );
+		echo '</div>';
+		echo ''
+		     . "<p class='certify-text text-primary lh-lg bg-primary-subtle p-3'><strong>I certify that I am 'over 18 years' and that I am under the supervision of a doctor. The ordered medication is for my own personal use and is strictly not meant for a re-sale. I also accept that I am taking the medicine /s at my own risk and that I am duly aware of all the effects / side effects of the medicine / s. If my order contain Tadalafil, I confirm that the same is not meant for consumption in the USA. I acknowledge that the drugs are as per the norms of the country of destination.</strong></p>"
+		     . '<p class="form-row file-upload" id="fileupload_field" data-priority=""><label for="fileupload_field" class="lh-1 mb-0">Upload Prescription&nbsp;</label><span class="woocommerce-input-wrapper"><div class="uploader" id="uploader"></div></span><input type="hidden" name="prescription_name" id="prescription_name" /></p>'
+		     . '</div>';
+	}
+
+    public function asgard_woocommerce_checkout_page_update_medical_condition_custom_checkout_field($order_id) {
+        if (!empty($_POST['physician_name'])) {
+            update_post_meta($order_id, '_medical_physician_name', sanitize_text_field($_POST['physician_name']));
+        }
+        if (!empty($_POST['physician_phone'])) {
+            update_post_meta($order_id, '_medical_physician_phone', sanitize_text_field($_POST['physician_phone']));
+        }
+        if (!empty($_POST['drug_allergies'])) {
+            update_post_meta($order_id, '_medical_drug_allergies', sanitize_text_field($_POST['drug_allergies']));
+        }
+        if (!empty($_POST['current_medications'])) {
+            update_post_meta($order_id, '_medical_current_medications', sanitize_text_field($_POST['current_medications']));
+        }
+        if (!empty($_POST['current_treatments'])) {
+            update_post_meta($order_id, '_medical_current_treatments', sanitize_text_field($_POST['current_treatments']));
+        }
+        if (!empty($_POST['smoke'])) {
+            update_post_meta($order_id, '_medical_smoke', ($_POST['smoke']));
+        }
+        if (!empty($_POST['drink_alcohol'])) {
+            update_post_meta($order_id, '_medical_drink_alcohol', ($_POST['drink_alcohol']));
+        }
+        if (!empty($_POST['prescription_name'])) {
+            update_post_meta($order_id, '_prescription', ($_POST['prescription_name']));
+        }
+    }
+
+    public function asgard_woocommerce_checkout_page_display_medical_condition_custom_checkout_field($order) {
+        $smoke = get_post_meta($order->id, '_medical_smoke', true);
+        $smoke = (($smoke == 1) ? "Yes" : "No");
+        $drink_alcohol = get_post_meta($order->id, '_medical_drink_alcohol', true);
+        $drink_alcohol = (($drink_alcohol == 1) ? "Yes" : "No");
+        $baseUploadUrl = wp_get_upload_dir();
+        $output_dir = $baseUploadUrl['baseurl'] . '/';
+        $fileName = get_post_meta($order->id, '_prescription', true);
+        $prescript_attach = "Not found";
+        if (!empty($fileName)) {
+            $prescript_attach = '<a href="' . $output_dir . $fileName . '" target="_blank">Download</a>';
+        }
+        echo '<p><strong>' . __("Physician's Name") . ':</strong> <br/>' . get_post_meta($order->id, '_medical_physician_name', true) . '</p>';
+        echo '<p><strong>' . __("Physician's Telephone No") . ':</strong> <br/>' . get_post_meta($order->id, '_medical_physician_phone', true) . '</p>';
+        echo '<p><strong>' . __('Drug Allergies') . ':</strong> <br/>' . get_post_meta($order->id, '_medical_drug_allergies', true) . '</p>';
+        echo '<p><strong>' . __('Current Medications') . ':</strong> <br/>' . get_post_meta($order->id, '_medical_current_medications', true) . '</p>';
+        echo '<p><strong>' . __('Current Treatments') . ':</strong> <br/>' . get_post_meta($order->id, '_medical_current_treatments', true) . '</p>';
+        echo '<p><strong>' . __('Smoke?') . ':</strong> ' . $smoke . '</p>';
+        echo '<p><strong>' . __('Drink Alcohol') . ':</strong> ' . $drink_alcohol . '</p>';
+        echo '<p><strong>' . __('Prescription') . ':</strong> <br/>' . $prescript_attach . '</p>';
+    }
+
+	public function asgard_remove_checkout_optional_text( $field, $key, $args, $value ) {
+		if ( is_checkout() && ! is_wc_endpoint_url() ) {
+			$optional = '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'woocommerce' ) . ')</span>';
+			$field    = str_replace( $optional, '', $field );
+		}
+
+		return $field;
+	}
+
+	public function asgard_upload_prescription() {
+		$fileName      = '';
+		$baseUploadUrl = wp_get_upload_dir();
+		$output_dir    = $baseUploadUrl['basedir'] . '/';
+		$yearMonth     = $baseUploadUrl['subdir'] . '/';
+		if ( isset( $_FILES["prescription"] ) ) {
+			$error = $_FILES["prescription"]["error"];
+			if ( ! is_array( $_FILES["prescription"]["name"] ) ) { //single file
+				$fileName = $_FILES["prescription"]["name"];
+				$fileName = $yearMonth . $fileName;
+				move_uploaded_file( $_FILES["prescription"]["tmp_name"], $output_dir . $fileName );
+				$ret[] = $fileName;
+			} else {  //Multiple files, file[]
+				$fileCount = count( $_FILES["prescription"]["name"] );
+				for ( $i = 0; $i < $fileCount; $i ++ ) {
+					$fileName = $_FILES["prescription"]["name"][ $i ];
+					$fileName = $yearMonth . $fileName;
+					move_uploaded_file( $_FILES["prescription"]["tmp_name"][ $i ], $output_dir . $fileName );
+					$ret[] = $fileName;
+				}
+			}
+			wp_send_json( $ret );
+			wp_die();
+		}
+	}
+
+	public function asgard_delete_prescription_action() {
+		$baseUploadUrl = wp_get_upload_dir();
+		$output_dir    = $baseUploadUrl['basedir'] . "/";
+		if ( isset( $_POST["op"] ) && $_POST["op"] == "delete" && isset( $_POST['name'] ) ) {
+			$fileCount = count( $_POST['name'] );
+			for ( $i = 0; $i < $fileCount; $i ++ ) {
+				$fileName = $_POST['name'][ $i ];
+				//$fileName =$_POST['name'];
+				$fileName = str_replace( "..", ".", $fileName ); //text-danger. if somebody is trying parent folder files
+				$filePath = $output_dir . $fileName;
+				if ( file_exists( $filePath ) ) {
+					@unlink( $filePath );
+				}
+			}
+		}
+		wp_die();
+	}
+
+	public function asgard_display_thankyou_popup( $order_id ) {
+		if ( is_wc_endpoint_url( 'order-received' ) ) {
+			$order = wc_get_order($order_id);
+			?>
+            <script type="text/javascript">
+                jQuery(document).ready(function ($) {
+	                <?php if ($order->has_status('failed')) { ?>
+                    $('#order-failed-popup').modal('show');
+	                <?php } else { ?>
+                    $('#thankyou-popup').modal('show');
+	                <?php } ?>
+                });
+            </script>
+            <div class="modal fade" id="thankyou-popup" tabindex="-1" role="dialog"
+                 aria-labelledby="thankyou-popup-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="d-flex justify-content-center align-items-center py-3 py-sm-5 flex-column">
+
+                                    <div class="mb-4 text-center">
+                                        <svg width="75" height="75" fill="var(--bs-primary)"><use href="#icon-circle-check"></use></svg>
+                                    </div>
+                                    <div class="text-center">
+                                        <h1>Thank You !</h1>
+                                        <p>Your order has been received. We've send the link to your inbox.</p>
+                                        <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="modal fade" id="order-failed-popup" tabindex="-1" role="dialog"
+                 aria-labelledby="order-failed-popup-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="d-flex justify-content-center align-items-center py-3 py-sm-5 flex-column">
+
+                                    <div class="mb-4 text-center">
+                                        <svg width="75" height="75" fill="var(--bs-danger)"><use href="#icon-close"></use></svg>
+                                    </div>
+                                    <div class="text-center">
+                                        <h1>Ohh, Order failed !</h1>
+                                        <p>Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.</p>
+                                        <button class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			<?php
+		}
+	}
+
+    public function asgard_custom_wc_account_menu_item_classes( $classes, $endpoint ) {
+	    global $wp;
+
+	    $additional_classes = array(
+		    'active', // Replace 'is-active' with 'active'.
+	    );
+
+	    $current = isset( $wp->query_vars[ $endpoint ] );
+	    if ( 'dashboard' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
+		    $current = true;
+	    } elseif ( 'orders' === $endpoint && isset( $wp->query_vars['view-order'] ) ) {
+		    $current = true;
+	    } elseif ( 'payment-methods' === $endpoint && isset( $wp->query_vars['add-payment-method'] ) ) {
+		    $current = true;
+	    }
+
+	    if ( $current ) {
+		    $classes = array_merge( $classes, $additional_classes );
+	    }
+
+	    return $classes;
+    }
+
+    public function asgard_woocommerce_product_loop_title_classes($classes){
+	    $classes = 'h6 woo-title text-truncate-2';
+	    return $classes;
+    }
+    public function asgard_woocommerce_loop_add_to_cart_link($link, $product) {
+	    $args = array();
+	    $args['class'] = isset($args['class']) ? $args['class'] : 'btn btn-primary rounded-pill'; // Default class if not set
+	    $args['class'] .= ' fs-14 btn btn-primary rounded-pill'; // Add the custom class
+
+	    $link = preg_replace('/class="([^"]*)"/', 'class="' . esc_attr($args['class']) . '"', $link);
+
+	    return $link;
+    }
+
+    public function asgard_woocommerce_before_shop_loop_item_add_div(){
+        echo "<div class='card border border-primary border-opacity-75'>";
+    }
+	public function asgard_woocommerce_after_shop_loop_item_end_div(){
+		echo "</div>";
+	}
+    public function asgard_add_start_div_for_bootstrap_card(){
+		echo "<div class='card-body text-center'>";
+	}
+
+    public function asgard_add_end_div_for_bootstrap_card(){
+        echo "</div>";
+    }
+
+    public function asgard_taxonomy_add_new_category_description_field(){
+        ?>
+    <div class="form-field">
+        <label for="rv_cate_desc"><?php _e('Second Category Description', 'asgard'); ?></label>
+        <textarea name="rv_cate_desc" id="rv_cate_desc"></textarea>
+        <p class="description"><?php _e('Enter a second category description', 'asgard'); ?></p>
+    </div>
+    <?php
+    }
+    public function asgard_taxonomy_add_edit_category_description_field($term){
+//getting term ID
+    $term_id = $term->term_id;
+    // retrieve the existing value(s) for this meta field.
+    $rv_cate_desc = get_term_meta($term_id, 'rv_cate_desc', true);
+    ?>
+    <tr class="form-field">
+        <th scope="row" valign="top"><label for="rv_cate_desc"><?php _e('Second Category Description', 'asgard'); ?></label></th>
+        <td>
+           <?php
+            $args = array(
+                'media_buttons' => false, // This setting removes the media button.
+            );
+            $content = ($rv_cate_desc) ? ($rv_cate_desc) : '';
+
+            wp_editor($content, 'rv_cate_desc', $args); ?>
+            <p class="description"><?php _e('Enter a second category description', 'asgard'); ?></p>
+        </td>
+    </tr>
+    <?php
+    }
+
+    public function asgard_save_taxonomy_custom_meta($term_id){
+        $rv_cate_desc = filter_input(INPUT_POST, 'rv_cate_desc');
+        update_term_meta($term_id, 'rv_cate_desc', $rv_cate_desc);
+    }
+
+    public function asgard_display_content_on_archive_page(){
+        $queried_object = get_queried_object();
+        $term_id = $queried_object->term_id;
+        $rv_cate_desc = get_term_meta($term_id, 'rv_cate_desc', true);
+        if (!empty($rv_cate_desc)) {
+            ?>
+            <div class="archive-custom-content my-4">
+                <?php echo wpautop($rv_cate_desc); ?>
+            </div>
+            <?php
+        }
+    }
+
+    public function asgard_add_registration_fields(){
+        ?>
+    <div class="row">
+        <div class="form-group col-sm-6 mb-3">
+            <label for="reg_billing_first_name" class="form-label fs-14 lh-1"><?php _e('First name', 'woocommerce'); ?> <span class="text-danger">*</span></label>
+            <input type="text" class="form-control border border-secondary border-opacity-75" name="billing_first_name" id="reg_billing_first_name" value="<?php if (!empty($_POST['billing_first_name'])) {esc_attr_e($_POST['billing_first_name']);} ?>" maxlength="32" />
+        </div>
+
+        <div class="form-group col-sm-6 mb-3">
+            <label for="reg_billing_last_name" class="form-label fs-14 lh-1"><?php _e('Last name', 'woocommerce'); ?> <span class="text-danger">*</span></label>
+            <input type="text" class="form-control border border-secondary border-opacity-75" name="billing_last_name" id="reg_billing_last_name" value="<?php if (!empty($_POST['billing_last_name'])) {esc_attr_e($_POST['billing_last_name']);} ?>" maxlength="32" />
+        </div>
+        <div class="form-group col-sm-12 mb-3">
+            <label for="reg_billing_phone" class="form-label fs-14 lh-1"><?php _e('Phone number', 'woocommerce'); ?> <span class="text-danger">*</span></label>
+            <input type="text" class="form-control border border-secondary border-opacity-75" name="billing_phone" id="reg_billing_phone" value="<?php if (!empty($_POST['billing_phone'])) {esc_attr_e($_POST['billing_phone']);} ?>" maxlength="10" />
+        </div>
+    </div>
+    <div class="clear"></div>
+
+    <?php
+    }
+    public function asgard_add_registration_password_confirm_field(){
+        ?>
+        <div class="form-row form-group col-sm-12 mb-3">
+            <label for="reg_password2" class="form-label fs-14 lh-1"><?php _e('Password Confirm', 'woocommerce'); ?> <span class="text-danger">*</span></label>
+            <input type="password" class="form-control border border-secondary border-opacity-75" name="password2" id="reg_password2" value="<?php if (!empty($_POST['password2'])) echo esc_attr($_POST['password2']); ?>" />
+        </div>
+        <?php
+    }
+    public function asgard_validate_registration_fields($errors, $username, $email){
+        extract($_POST);
+
+        if (isset($_POST['billing_first_name']) && empty($_POST['billing_first_name'])) {
+            $errors->add('billing_first_name_error', __('First name is text-danger!', 'woocommerce'));
+        }
+        if (isset($_POST['billing_last_name']) && empty($_POST['billing_last_name'])) {
+            $errors->add('billing_last_name_error', __('Last name is text-danger!.', 'woocommerce'));
+        }
+        if (isset($_POST['billing_phone']) && empty($_POST['billing_phone'])) {
+            $errors->add('billing_phone_error', __('Phone number is text-danger!.', 'woocommerce'));
+        }
+        if (isset($_POST['billing_phone']) && (!preg_match('/^[0-9]{10}+$/', $_POST['billing_phone']))) {
+            $errors->add('billing_phone_error', __('Phone number is invalid!.', 'woocommerce'));
+        }
+
+        if (strcmp($password, $password2) !== 0) {
+            $errors->add('registration-error', __('Passwords do not match.', 'woocommerce'));
+        }
+
+
+    return $errors;
+    }
+
+    public function asgard_save_registration_fields($customer_id){
+        if (isset($_POST['billing_first_name'])) {
+            update_user_meta($customer_id, 'billing_first_name', sanitize_text_field($_POST['billing_first_name']));
+            update_user_meta($customer_id, 'first_name', sanitize_text_field($_POST['billing_first_name']));
+        }
+        if (isset($_POST['billing_last_name'])) {
+            update_user_meta($customer_id, 'billing_last_name', sanitize_text_field($_POST['billing_last_name']));
+            update_user_meta($customer_id, 'last_name', sanitize_text_field($_POST['billing_last_name']));
+        }
+        if (isset($_POST['billing_phone'])) {
+            // Mobile No. input filed (Billing Phone of WooCommerce)
+            update_user_meta($customer_id, 'billing_phone', sanitize_text_field($_POST['billing_phone']));
+        }
+    }
+
+    public function asgard_woocommerce_confirm_password_validation_on_checkout_page($fields, $errors){
+        $checkout = WC()->checkout;
+        if (!is_user_logged_in() && ( $checkout->must_create_account || !empty($posted['createaccount']) )) {
+            if (strcmp($fields['account_password'], $fields['account_confirm_password']) !== 0) {
+                $errors->add(__('Passwords do not match.', 'woocommerce'));
+            }
+        }
+    }
 }

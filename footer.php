@@ -49,32 +49,32 @@
     <div class="social-payment border-top bg-dark py-sm-4 py-2">
         <div class="container">
             <div class="row">
-                <div class="social-links col-sm-6 py-2">
-                    <ul class="d-flex m-0 p-0 justify-content-sm-start justify-content-center">
-                        <li class="list-unstyled">
-                            <a href="https://www.facebook.com/arrowmedsus/" target="_blank">
-                                <svg width="35" height="35">
+                <div class="social-links col-sm-6 py-2 d-flex align-items-center">
+                    <ul class="list-inline m-0 p-0 text-center text-sm-start w-100">
+                        <li class="list-inline-item">
+                            <a href="https://www.facebook.com/arrowmedsus/" target="_blank" class="bg-primary p-1 rounded-2 lh-sm">
+                                <svg width="15" height="15" fill="#fff">
                                     <use href="#icon-facebook"></use>
                                 </svg>
                             </a>
                         </li>
-                        <li class="list-unstyled">
-                            <a href="https://twitter.com/arrowmeds" target="_blank">
-                                <svg width="35" height="35">
+                        <li class="list-inline-item">
+                            <a href="https://twitter.com/arrowmeds" target="_blank" class="bg-primary p-1 rounded-2 lh-sm">
+                                <svg width="15" height="15" fill="#fff">
                                     <use href="#icon-twitter"></use>
                                 </svg>
                             </a>
                         </li>
-                        <li class="list-unstyled">
-                            <a href="https://www.linkedin.com/" target="_blank">
-                                <svg width="35" height="35">
-                                    <use href="#icon-pinterest"></use>
+                        <li class="list-inline-item">
+                            <a href="https://www.linkedin.com/" target="_blank" class="bg-primary p-1 rounded-2 lh-sm">
+                                <svg width="15" height="15" fill="#fff">
+                                    <use href="#icon-linkedin"></use>
                                 </svg>
                             </a>
                         </li>
-                        <li class="list-unstyled">
-                            <a href="https://www.instagram.com/arrowmedsus/" target="_blank">
-                                <svg width="35" height="35" class="p1">
+                        <li class="list-inline-item">
+                            <a href="https://www.instagram.com/arrowmedsus/" target="_blank" class="bg-primary p-1 rounded-2 lh-sm">
+                                <svg width="15" height="15" fill="#fff">
                                     <use href="#icon-instagram"></use>
                                 </svg>
                             </a>

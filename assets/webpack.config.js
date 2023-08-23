@@ -5,7 +5,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require('copy-webpack-plugin'); // https://webpack.js.org/plugins/copy-webpack-plugin/
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-// const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const glob = require('glob-all');
 
 const JS_DIR = path.resolve(__dirname, 'src/js');
@@ -45,15 +45,18 @@ const plugins = ( argv ) => [
         injectPolyfill: true,
         combineAssets: true,
     }),
-    // new PurgeCSSPlugin({
-    //     paths: glob.sync([
-    //         path.join(__dirname, '../*.php'),
-    //         path.join(__dirname, '../inc/**/*.php'),
-    //         path.join(__dirname, '../template-parts/**/*.php'),
-    //         path.join(__dirname, '../template-parts/*.php'),
-    //         path.join(__dirname, 'node_modules/bootstrap/**/*.scss'), // Add the path to Bootstrap SCSS files
-    //     ]),
-    // }),
+    new PurgeCSSPlugin({
+        paths: glob.sync([
+            path.join(__dirname, '../*.php'),
+            path.join(__dirname, '../inc/**/*.php'),
+            path.join(__dirname, '../template-parts/**/*.php'),
+            path.join(__dirname, '../template-parts/*.php'),
+            path.join(__dirname, '../woocommerce/**/**/*.php'),
+            path.join(__dirname, '../woocommerce/**/*.php'),
+            path.join(__dirname, '../woocommerce/*.php'),
+            path.join(__dirname, 'node_modules/bootstrap/**/*.scss'), // Add the path to Bootstrap SCSS files
+        ]),
+    }),
 ];
 
 const rules = [

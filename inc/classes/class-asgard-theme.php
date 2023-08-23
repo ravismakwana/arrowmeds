@@ -78,6 +78,12 @@ class ASGARD_THEME {
 		// Removed core block patterns
 		remove_theme_support('core-block-patterns');
 
+		remove_theme_support( 'wc-product-gallery-zoom' );
+		remove_theme_support( 'wc-product-gallery-lightbox' );
+		remove_theme_support( 'wc-product-gallery-slider' );
+		// Add WooCommerce Support
+		add_theme_support( 'woocommerce' );
+
 		global $content_width;
 		if(!isset($content_width)) {
 			$content_width = 1240;
