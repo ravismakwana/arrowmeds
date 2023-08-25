@@ -131,7 +131,17 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
 			}
 			?>
             <div class="offer-zone pb-sm-4 pb-md-4 pb-lg-0">
-                <a href="#" class="badge text-bg-danger fs-14 text-decoration-none fw-normal">Offer Zone</a>
+                <?php
+                $category = get_term_by( 'slug', 'offer-zone', 'product_cat' );
+                if(!empty($category)) {
+	                $cat_id = $category->term_id;
+	                $category_link = get_category_link( $cat_id );
+                } else {
+                    echo 'category slug not found';
+                }
+
+                ?>
+                <a href="<?php echo esc_url( $category_link ); ?>" class="badge text-bg-danger fs-14 text-decoration-none fw-normal">Offer Zone</a>
             </div>
         </div>
         <div class="show_mega_menu_block bg-white position-absolute start-0 end-0 mx-auto my-0 border-start border-end border-bottom border-opacity-25 border-secondary shadow rounded-bottom d-none invisible"

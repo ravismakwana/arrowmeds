@@ -43,7 +43,7 @@ class Loadmore_Posts {
 		$args = [
 			'post_type'         => 'post',
 			'post_status'       => 'publish',
-			'posts_per_page'    => 6,
+			'posts_per_page'    => 4,
 			'paged'             => $paged
 		];
 

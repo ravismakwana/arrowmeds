@@ -18,6 +18,8 @@
 defined( 'ABSPATH' ) || exit;
 $taxonomyArg = $taxonomyTermArg = '';
 get_header( 'shop' );
+$paged = get_query_var('paged') ? get_query_var('paged') : 1;
+$paged = !empty($_POST['page']) ? filter_var( $_POST['page'], FILTER_VALIDATE_INT ) + 1 : $paged;
 ?>
     <div class="container">
         <div class="row">
@@ -74,26 +76,53 @@ get_header( 'shop' );
 						$post_type   = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
 						do_action( 'woocommerce_shop_loop' );
 						if ( ! empty( $search_text ) || ! empty( $post_type ) ) {
-							echo do_shortcode( '[ajax_load_more transition_container_classes="row" woocommerce="true" search="' . $search_text . '" post_type="' . $post_type . '" taxonomy="product_cat" taxonomy_operator="IN" css_classes="" posts_per_page="12" transition="fade" button_label="View More Products" button_loading_label="Loading Products..." container_type="ul"]' );
+							$args = array(
+								'post_type' => $post_type,
+								'posts_per_page' => '4',
+								'button_label' => 'Show More Posts',
+								'button_loading_label' => 'Loading...',
+								'scroll' => 'false',
+								'transition_container_classes'=> "row",
+								'search' => $search_text,
+							);
+							if(function_exists('alm_render')){
+								alm_render($args);
+							}
+                            wp_reset_postdata();
+//							echo do_shortcode( '[ajax_load_more transition_container_classes="row" woocommerce="true" search="' . $search_text . '" post_type="' . $post_type . '" taxonomy="product_cat" taxonomy_operator="IN" css_classes="" posts_per_page="12" transition="fade" button_label="View More Products" button_loading_label="Loading Products..." container_type="ul"]' );
 						} else {
 							if ( is_archive() ) {
 
 								if ( ! is_shop() ) {
 									$obj         = get_queried_object();
 									$taxonomy    = $obj->taxonomy;
-									$taxonomyArg = ( ! empty( $taxonomy ) ) ? "taxonomy=" . $taxonomy : '';
+									$taxonomyArg = ( ! empty( $taxonomy ) ) ? $taxonomy : '';
 
 									$taxonomy_term   = $obj->slug;
-									$taxonomyTermArg = ( ! empty( $taxonomy_term ) ) ? "taxonomy_terms=" . $taxonomy_term : '';
+									$taxonomyTermArg = ( ! empty( $taxonomy_term ) ) ? $taxonomy_term : '';
 								}
-
+								$args = array(
+									'post_type' => 'product',
+									'posts_per_page' => '4',
+									'button_label' => 'Show More Posts',
+									'button_loading_label' => 'Loading...',
+									'scroll' => 'false',
+									'transition_container_classes'=> "row",
+                                    'taxonomy' => $taxonomyArg,
+                                    'taxonomy_terms' => $taxonomyTermArg,
+								);
+								if(function_exists('alm_render')){
+									alm_render($args);
+								}
+								wp_reset_postdata();
 								// Product Taxonomy Archive
-								echo do_shortcode( '[ajax_load_more transition_container_classes="row" woocommerce="true" post_type="product" "' . $taxonomyArg . '" "' . $taxonomyTermArg . '"  taxonomy_operator="IN" css_classes="" posts_per_page="12" transition="fade" button_label="View More Products" button_loading_label="Loading Products..."]' );
+//								echo do_shortcode( '[ajax_load_more transition_container_classes="row" woocommerce="true" post_type="product" "' . $taxonomyArg . '" "' . $taxonomyTermArg . '"  taxonomy_operator="IN" css_classes="" posts_per_page="12" transition="fade" button_label="View More Products" button_loading_label="Loading Products..."]' );
 							} else {
 //                                     Shop Landing Page
 								echo "<p>" . woocommerce_page_title() . " category have not products.</p>";
 							}
 						}
+
 //						wc_get_template_part( 'content', 'product' );
 //					}
 					}
@@ -121,6 +150,7 @@ get_header( 'shop' );
 				 * @hooked woocommerce_output_content_wrapper_end - 10 (outputs closing divs for the content)
 				 */
 				do_action( 'woocommerce_after_main_content' );
+				wp_reset_postdata();
 				?>
             </div>
             <div class="col-lg-3 mt-3">

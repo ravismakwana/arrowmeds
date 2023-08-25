@@ -142,7 +142,7 @@ function asgard_the_excerpt( $trim_character_count = 0 ) {
 
 function asgard_excerpt_more() {
 	if ( ! is_single() ) {
-		$more = sprintf( '<a class="asgard-read-more text-white mt-3 btn btn-info" href="%1$s">%2$s</a>',
+		$more = sprintf( '<a class="asgard-read-more text-white mt-3 btn btn-primary" href="%1$s">%2$s</a>',
 			get_permalink( get_the_ID() ),
 			__( 'Read more', 'asgard' )
 		);

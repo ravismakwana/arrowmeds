@@ -396,7 +396,7 @@ class Asgard_Woocommerce {
 		$attributes = $product->get_attributes();
 		?>
         <div class="table-responsive">
-        <table class="shop_attributes table table-striped border border-primary border-opacity-10 mt-2">
+        <table class="shop_attributes table border border-primary border-opacity-10 mt-2 align-middle">
 			<?php if ( $product->get_sku() ) { ?>
                 <tr>
                     <th class="table-light">Product Code:</th>
@@ -1566,7 +1566,7 @@ class Asgard_Woocommerce {
     }
 
     public function asgard_woocommerce_review_order_before_payment(){
-        echo '<img src="' . ASGARD_BUILD_IMG_URI . '/secure-with-macfee.webp" alt="Secure with macfee" width="229" height="37" class="img-fluid float-start mt-4 ms-3 mb-2">';
+        echo '<a href="javascript:void()" class="float-start pt-4 ps-3 pb-2 w-100"><img src="' . ASGARD_BUILD_IMG_URI . '/secure-with-macfee.webp" alt="Secure with macfee" width="229" height="37" class="img-fluid"></a>';
     }
     public function asgard_display_variation_in_table_format_amp(){
         ?>

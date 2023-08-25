@@ -26,7 +26,7 @@ class Sidebar {
 				'id'            => 'sidebar-1',
 				'name'          => __( 'Sidebar', 'asgard' ),
 				'description'   => __( 'A short description of the sidebar.', 'asgard' ),
-				'before_widget' => '<div id="%1$s" class="widget %2$s">',
+				'before_widget' => '<div id="%1$s" class="widget %2$s mb-4">',
 				'after_widget'  => '</div>',
 				'before_title'  => '<h3 class="widget-title">',
 				'after_title'   => '</h3>',

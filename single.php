@@ -15,7 +15,7 @@ get_header();
 			?>
             <div class="container">
 				<div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-8 mt-3">
 	                    <?php
 	                    if(is_home() && (!is_front_page())) {
 		                    ?>
@@ -25,14 +25,14 @@ get_header();
 		                    <?php
 	                    }
 	                    ?>
-                        <div class="row">
+
 		                    <?php
 
 		                    while(have_posts()) : the_post();
 			                    get_template_part('template-parts/content');
 		                    endwhile;
 		                    ?>
-                        </div>
+
 
 	                    <?php
 	                    } else {

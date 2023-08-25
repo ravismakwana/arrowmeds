@@ -85,5 +85,14 @@
     max-width: 415px;
   }
 }
-
+.primary-sidebar {
+  .widget {
+    ul {
+      padding-left: 15px;
+    }
+    li {
+      padding: 5px 0;
+    }
+  }
+}
 /* Single Product page style end */

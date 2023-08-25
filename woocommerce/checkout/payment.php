@@ -23,7 +23,7 @@ if ( ! wp_doing_ajax() ) {
 ?>
 <div id="payment" class="woocommerce-checkout-payment bg-primary-subtle p-2 mb-5">
 	<?php if ( WC()->cart->needs_payment() ) : ?>
-		<ul class="wc_payment_methods payment_methods methods border-bottom d-inline-block">
+		<ul class="wc_payment_methods payment_methods methods border-bottom d-inline-block w-100">
 			<?php
 			if ( ! empty( $available_gateways ) ) {
 				foreach ( $available_gateways as $gateway ) {
