@@ -25,13 +25,12 @@ if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists
 		?>
 
 		<?php if ( wc_terms_and_conditions_checkbox_enabled() ) : ?>
-			<p class="form-row validate-required">
-				<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox d-flex align-items-center">
-				<input type="checkbox" class="form-check-input mt-0 me-2" name="terms" <?php checked( apply_filters( 'woocommerce_terms_is_checked_default', isset( $_POST['terms'] ) ), true ); // WPCS: input var ok, csrf ok. ?> id="terms" />
-					<span class="woocommerce-terms-and-conditions-checkbox-text h6 lh-1 mb-0 "><?php wc_terms_and_conditions_checkbox_text(); ?></span>&nbsp;<abbr class="required" title="<?php esc_attr_e( 'required', 'woocommerce' ); ?>">*</abbr>
-				</label>
-				<input type="hidden" name="terms-field" value="1" />
-			</p>
+
+            <div class="form-row validate-required form-check">
+                <input type="checkbox" class="form-check-input" name="terms" <?php checked( apply_filters( 'woocommerce_terms_is_checked_default', isset( $_POST['terms'] ) ), true ); // WPCS: input var ok, csrf ok. ?> id="terms"  />
+                <label class="form-check-label woocommerce-form__label woocommerce-form__label-for-checkbox lh-sm mb-0"" for="terms"><?php wc_terms_and_conditions_checkbox_text(); ?></span>&nbsp;<abbr class="required" title="<?php esc_attr_e( 'required', 'woocommerce' ); ?>">*</abbr></label>
+                <input type="hidden" name="terms-field" value="1" />
+            </div>
 		<?php endif; ?>
 	</div>
 	<?php

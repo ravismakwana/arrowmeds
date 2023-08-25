@@ -565,3 +565,25 @@ if ( ! function_exists ( 'asgard_canvas_menu' ) ) {
 		return $output;
 	}
 }
+
+function asgard_get_completed_orders_before_after($date_one, $date_two) {
+	global $wpdb;
+	$completed_orders = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT posts.ID
+         FROM {$wpdb->prefix}posts AS posts
+         WHERE posts.post_type = 'shop_order'
+         AND posts.post_status = 'wc-completed'
+         AND posts.post_modified >= '%s'
+         AND posts.post_modified <= '%s'",
+			date('Y/m/d H:i:s', absint($date_one)),
+			date('Y/m/d H:i:s', absint($date_two))
+		)
+	);
+
+	return $completed_orders;
+}
+// Schedule an action if it's not already scheduled
+if (!wp_next_scheduled('asgard_add_every_seven_days')) {
+	wp_schedule_event(time(), 'every_seven_days', 'asgard_add_every_seven_days');
+}

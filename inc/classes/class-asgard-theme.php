@@ -26,6 +26,7 @@ class ASGARD_THEME {
 		Asgard_Woocommerce::get_instance();
 		Asgard_Shortcodes::get_instance();
 		Store_Information::get_instance();
+		Schema::get_instance();
 		$this->setup_hooks();
 	}
 

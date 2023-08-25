@@ -19,6 +19,7 @@ class Asgard_Shortcodes {
 	protected function setup_hooks() {
 		// shortcodes
 		add_shortcode( 'display_mega_menu', [ $this, 'mega_menu_function' ] );
+		add_shortcode( 'current_year', [ $this, 'asgard_current_year' ] );
 	}
 
 	public function get_worldcollection_category_tree( $cat ) {
@@ -91,4 +92,9 @@ class Asgard_Shortcodes {
 
 		return $data;
 	}
+
+	public function asgard_current_year(){
+		return date_i18n ('Y');
+	}
+
 }

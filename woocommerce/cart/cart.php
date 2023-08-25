@@ -171,11 +171,12 @@ do_action( 'woocommerce_before_cart' ); ?>
 		</tbody>
 	</table>
 	<?php do_action( 'woocommerce_after_cart_table' ); ?>
-</form>
+
 
 <?php do_action( 'woocommerce_before_cart_collaterals' ); ?>
 
-<div class="cart-collaterals-asgard row">
+<div class="cart-collaterals-asgard">
+    <div class="row actions">
 	<?php if ( wc_coupons_enabled() ) { ?>
         <div class="coupon col-sm-6 mb-4">
             <h3 class="h3 fw-bold">Discount Codes</h3>
@@ -194,6 +195,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 		 */
 		do_action( 'woocommerce_cart_collaterals' );
 	?>
+    </div>
 </div>
-
+</form>
 <?php do_action( 'woocommerce_after_cart' ); ?>

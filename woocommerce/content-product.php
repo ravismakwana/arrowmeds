@@ -26,9 +26,9 @@ if ( empty( $product ) || ! $product->is_visible() ) {
 // Extra post classes
 $classes = array();
 if(is_shop() || is_product_category() ) {
-	$classes[] = 'item col-lg-3 col-md-3 col-sm-4 col-6 mb-4';
+	$classes[] = 'item col-lg-3 col-md-4 col-sm-6 col-6 mb-4';
 } else {
-	$classes[] = 'item col-lg-3 col-md-3 col-sm-4 col-6 mb-4';
+	$classes[] = 'item col-lg-3 col-md-4 col-sm-6 col-6 mb-4';
 }
 ?>
 <div <?php wc_product_class( $classes, $product ); ?>>

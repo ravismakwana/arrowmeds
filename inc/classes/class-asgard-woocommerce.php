@@ -10,6 +10,7 @@ namespace ASGARD_THEME\Inc;
 use ASGARD_THEME\Inc\Traits\Singleton;
 use WC_Product_Variable;
 use WC_AJAX;
+use WC_Email_Customer_Shipped_Order;
 
 class Asgard_Woocommerce {
 	use Singleton;
@@ -109,6 +110,50 @@ class Asgard_Woocommerce {
 		add_filter( 'woocommerce_registration_errors', [ $this, 'asgard_validate_registration_fields' ], 10, 3);
         add_action( 'woocommerce_created_customer', [ $this, 'asgard_save_registration_fields' ], 10, 1 );
         add_action( 'woocommerce_after_checkout_validation', [ $this, 'asgard_woocommerce_confirm_password_validation_on_checkout_page' ], 10, 2 );
+        add_action( 'woocommerce_checkout_init', [ $this, 'asgard_woocommerce_confirm_password_checkout_page' ], 10, 1 );
+        add_filter( 'woocommerce_checkout_fields', [ $this, 'asgard_woocommerce_create_password_checkout_page' ], 15, 1 );
+        add_filter( 'woocommerce_package_rates', [ $this, 'asgard_hide_shipping_when_free_is_available' ], 100, 1 );
+        add_filter( 'gettext', [ $this, 'asgard_translate_bic_to_swift_code' ], 10, 3 );
+        //email
+        add_filter( 'woocommerce_email_order_items_args', [ $this, 'asgard_add_sku_to_wc_emails' ], 10, 1 );
+        add_filter( 'woocommerce_cod_process_payment_order_status', [ $this, 'asgard_change_cod_payment_order_status' ], 15 );
+        add_action( 'woocommerce_email_before_order_table', [ $this, 'asgard_add_content_specific_email' ], 20, 4 );
+        add_action( 'wp_mail_from_name', [ $this, 'asgard_wp_mail_from_name' ], 10, 1 );
+        add_action( 'wp_mail_from', [ $this, 'asgard_wp_mail_from' ], 10, 1 );
+        add_filter( 'woocommerce_credit_card_form_fields', [ $this, 'asgard_change_cvc_cvv_text' ], 10, 2 );
+        add_action( 'init', [ $this, 'asgard_remove_output_structured_data' ], 10);
+        add_filter( 'woocommerce_order_number', [ $this, 'asgard_change_woocommerce_order_number' ], 10, 1 );
+        add_filter( 'woocommerce_email_recipient_cancelled_order', [ $this, 'asgard_wc_cancelled_order_add_customer_email' ], 10, 2 );
+        add_filter( 'woocommerce_email_recipient_failed_order', [ $this, 'asgard_wc_cancelled_order_add_customer_email' ], 10, 2 );
+        add_filter( 'woocommerce_shop_order_search_results', [ $this, 'asgard_custom_shop_order_search_results_filter' ], 10, 3 );
+
+        add_filter( 'woocommerce_email_recipient_customer_completed_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
+        add_filter( 'woocommerce_email_recipient_customer_shipped_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
+        add_filter( 'woocommerce_email_recipient_customer_on_hold_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
+        add_filter( 'woocommerce_email_recipient_customer_processing_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
+        add_filter( 'woocommerce_email_recipient_customer_note', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
+        add_filter( 'woocommerce_email_recipient_customer_refunded_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
+
+
+        // Add New order status "Shipped"
+        add_action( 'init', [ $this, 'asgard_register_shipped_order_status' ], 10);
+        add_filter( 'wc_order_statuses', [ $this, 'asgard_add_shipped_to_order_statuses' ], 10, 1);
+        add_action( 'woocommerce_order_status_changed', [ $this, 'asgard_shipped_status_custom_notification' ], 10, 4);
+        add_action( 'woocommerce_order_status_wc-shipped', [ WC(), 'send_transactional_email' ], 10, 1);
+        add_filter( 'woocommerce_email_actions', [ $this, 'asgard_filter_woocommerce_email_actions' ], 10, 1);
+        add_filter( 'woocommerce_email_classes', [ $this, 'asgard_add_shipped_order_woocommerce_email' ], 10, 1);
+        add_filter( 'woocommerce_min_password_strength', [ $this, 'asgard_change_password_strength' ], 10, 1);
+        add_filter( 'asgard_change_password_strength', [ $this, 'asgard_change_the_text_for_password_hint' ], 10, 1);
+        add_filter( 'woocommerce_email_classes', [ $this, 'asgard_add_feedback_order_woocommerce_email' ], 10, 1);
+        add_filter( 'cron_schedules', [ $this, 'asgard_add_every_seven_days' ], 10, 1);
+        add_action( 'asgard_add_every_seven_days', [ $this, 'asgard_every_seven_days_event_func' ], 10 );
+        add_action( 'woocommerce_single_product_summary', [ $this, 'asgard_add_view_counter' ], 13 );
+        add_filter( 'woocommerce_order_item_name', [ $this, 'asgard_add_mg_attribute_in_order_email_' ], 10, 2 );
+        add_action( 'woocommerce_after_single_product_summary', [ $this, 'asgard_single_product_author' ], 9 );
+        add_action( 'woocommerce_review_order_before_payment', [ $this, 'asgard_woocommerce_review_order_before_payment' ], 10 );
+        add_action( 'kt_amp_build_product', [ $this, 'asgard_display_variation_in_table_format_amp' ], 10 );
+        add_action( 'kt_amp_header_after', [ $this, 'asgard_amp_search_for_product' ], 10 );
+        add_action( 'kt_amp_header_content_up', [ $this, 'asgard_kt_amp_header_content_up_function' ], 10 );
 	}
 
 	public function asgard_woocommerce_header_add_to_cart_fragment() {
@@ -1035,16 +1080,19 @@ class Asgard_Woocommerce {
     }
 
     public function asgard_display_content_on_archive_page(){
-        $queried_object = get_queried_object();
-        $term_id = $queried_object->term_id;
-        $rv_cate_desc = get_term_meta($term_id, 'rv_cate_desc', true);
-        if (!empty($rv_cate_desc)) {
-            ?>
-            <div class="archive-custom-content my-4">
-                <?php echo wpautop($rv_cate_desc); ?>
-            </div>
-            <?php
+        if(!is_shop()) {
+            $queried_object = get_queried_object();
+            $term_id = $queried_object->term_id;
+            $rv_cate_desc = get_term_meta($term_id, 'rv_cate_desc', true);
+            if (!empty($rv_cate_desc)) {
+                ?>
+                <div class="archive-custom-content my-4">
+                    <?php echo wpautop($rv_cate_desc); ?>
+                </div>
+                <?php
+            }
         }
+
     }
 
     public function asgard_add_registration_fields(){
@@ -1072,7 +1120,7 @@ class Asgard_Woocommerce {
         ?>
         <div class="form-row form-group col-sm-12 mb-3">
             <label for="reg_password2" class="form-label fs-14 lh-1"><?php _e('Password Confirm', 'woocommerce'); ?> <span class="text-danger">*</span></label>
-            <input type="password" class="form-control border border-secondary border-opacity-75" name="password2" id="reg_password2" value="<?php if (!empty($_POST['password2'])) echo esc_attr($_POST['password2']); ?>" />
+            <input type="password" class="form-control border border-secondary border-opacity-75" name="password2" id="reg_password2" value="<?php if (!empty($_POST['password2'])) {echo esc_attr($_POST['password2']);} ?>" />
         </div>
         <?php
     }
@@ -1095,8 +1143,6 @@ class Asgard_Woocommerce {
         if (strcmp($password, $password2) !== 0) {
             $errors->add('registration-error', __('Passwords do not match.', 'woocommerce'));
         }
-
-
     return $errors;
     }
 
@@ -1123,4 +1169,543 @@ class Asgard_Woocommerce {
             }
         }
     }
+
+    public function asgard_woocommerce_confirm_password_checkout_page($checkout){
+        if (get_option('woocommerce_registration_generate_password') == 'no') {
+
+            $fields = $checkout->get_checkout_fields();
+
+            $fields['account']['account_confirm_password'] = array(
+                'type' => 'password',
+                'label' => __('Confirm password', 'woocommerce'),
+                'label_class' => 'form-label fs-14 lh-1',
+                'input_class' => ['form-control', 'border', 'border-secondary', 'border-opacity-75'],
+                'required' => true,
+                'placeholder' => _x('Confirm Password', 'placeholder', 'woocommerce')
+            );
+
+            $checkout->__set('checkout_fields', $fields);
+        }
+    }
+    public function asgard_woocommerce_create_password_checkout_page($fields){
+//        echo "<pre>";
+//        print_r($fields);
+//        echo "</pre>";
+        $fields['account']['account_password']['input_class'] = ['form-control'];
+        $fields['account']['account_password']['label_class'] = ['fs-14 lh-1 form-check-label flex-fill mt-0'];
+        return $fields;
+    }
+
+    public function asgard_hide_shipping_when_free_is_available($rates){
+        $free = array();
+        foreach ($rates as $rate_id => $rate) {
+            if ('free_shipping' === $rate->method_id) {
+                $free[$rate_id] = $rate;
+                break;
+            }
+        }
+        return !empty($free) ? $free : $rates;
+    }
+
+    public function asgard_translate_bic_to_swift_code($translation, $text, $domain){
+        if ($domain == 'woocommerce') {
+            switch ($text) {
+                case 'BIC':
+                    $translation = 'SWIFT CODE';
+                    break;
+            }
+        }
+
+        return $translation;
+    }
+
+    public function asgard_add_sku_to_wc_emails(){
+        $args['show_sku'] = true;
+        return $args;
+    }
+    public function asgard_change_cod_payment_order_status(){
+        return 'on-hold';
+    }
+    public function asgard_add_content_specific_email($order, $sent_to_admin, $plain_text, $email){
+//        global $linea_Options;
+        $paypal_url = 'https://www.paypal.me/';
+//        $paypal_id = (!empty($linea_Options['paypal_url'])) ? $linea_Options['paypal_url'] : '';
+//        $paypal_name = (!empty($linea_Options['paypal_name'])) ? $linea_Options['paypal_name'] : '';
+        $cart_total = $order->get_total();
+        $paypal_url = $paypal_url . $paypal_id . '/' . $cart_total . 'usd';
+        $payment_title = $order->get_payment_method_title();
+
+        if ($payment_title == 'Pay By Credit/Debit Card') {
+            if ($email->id == 'customer_on_hold_order') {
+                if((!empty($paypal_name)) && (!empty($paypal_id))) {
+                echo '<p style="margin:0 0 16px;">Thanks for your valuable Order with us.
+                    <br/>Hope you and your loved ones are safe from Covid-19.</p>';
+
+                echo '<p style="margin:0 0 16px;">Before you make Payment , we would like to clarify the following.</p>';
+
+                echo '<p>1). Our PayPal Name : <strong>'.$paypal_name.'</strong> (Please do not describe any medicine name during payment or afterward as PayPal doesn\'t allow the medicinal transaction.)</p>';
+                echo '<p>2). We will be able to ship your order within <strong>1-2 days</strong> after confirmation of your payment.</p>';
+                echo '<p>3). There might be a little bit of delay in order delivery due to COVID-19.</p>';
+                echo '<p>4). Estimated delivery time is around <strong>3-4 Weeks</strong>.</p>';
+
+                echo '<p>If you agree, Then make payment <strong>BY CLICK ON BELOW PAY NOW BUTTON</strong> and pay for your order.</p>';
+                echo '<p style="margin:0 0 16px;text-align:center;"><a href="'.$paypal_url.'" target="_blank" style="font-weight: normal;text-align: center;background-color: #55c0a1;color: #ffffff;padding: 10px 20px;display: inline-block;border-radius: 4px;text-decoration: none;text-transform: uppercase;">Pay Now</a></p>';
+
+                echo '<p><strong>100% Satisfaction Guarantee.</strong> (If somehow your package is Delayed or not delivered, Then we can reship your package or refund your full payment).</p>';
+                } else {
+                    echo '<p>Your order has been successfully placed.</p>';
+                    echo '<p><strong>We will send you the PAYMENT LINK within 12 hours to your email. After your payment confirmation, Your order will be shipped within 24 hours and provide you the tracking number.</strong></p>';
+                }
+                echo '<p>Stay Tuned with your Email...!</p>';
+            }
+        } else if ($payment_title == 'Pay By Credit Card') {
+            if ($email->id == 'customer_on_hold_order') {
+                echo '<p>Your card will be charged within 24-36 hours and we will update you the status of your order.</p>';
+            }
+        }
+        if ( $email->id == 'customer_shipped_order' ) {
+            echo '<p>However, you can also track your order from below links, (use your tracking number)</p>';
+            echo '<table style="border-color:#dddddd;margin:0 0 16px;" width="100%" cellspacing="0" cellpadding="3" border="1">';
+            echo '<tr>';
+            echo '<th style="text-align:left;background:#efefef;font-weight:500;" width="35%">For USA Customers (USPS) : </th>';
+            echo '<td><a href="https://www.usps.com" target="_blank">https://www.usps.com</a>';
+            echo '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th style="text-align:left;background:#efefef;font-weight:500;" width="35%">For UK Customers (ParcelForce) : </th>';
+            echo '<td><a href="https://www.parcelforce.com/track-trace" target="_blank">https://www.parcelforce.com/track-trace</a>';
+            echo '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th style="text-align:left;background:#efefef;font-weight:500;" width="35%">For AUS Customers (AUSPOST) : </th>';
+            echo '<td><a href="https://auspost.com.au" target="_blank">https://auspost.com.au</a>';
+            echo '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th style="text-align:left;background:#efefef;font-weight:500;" width="35%">For All countries :  </th>';
+            echo '<td><a href="https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx" target="_blank">https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx</a>';
+            echo '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th style="text-align:left;background:#efefef;font-weight:500;" width="35%">For Singapore Post: </th>';
+            echo '<td><a href="https://www.aftership.com/track" target="_blank">https://www.aftership.com/track</a>';
+            echo '</td>';
+            echo '</tr>';
+            echo '</table>';
+            echo '<p><b>MUST NOTE :</b><br>You can track shipment after 3-4 days of shipment.</p>';
+            echo '<p>Average normal shipping time is 15-22 days, please (Delivery may be take up to 30 days from date of dispatch, due to if any disruption in postal services due to weather issue or natural disaster).</p>';
+        }
+        echo '<p><b>Our Operation time:</b><br/>9am to 9pm (Indian Time Only)</p>';
+        if ($email->id == 'customer_shipped_order') {
+            $trackingCode = get_post_meta($order->id, 'ywot_tracking_code', true);
+            $trackingName = get_post_meta($order->id, 'ywot_carrier_name', true);
+            $trackingDate = get_post_meta($order->id, 'ywot_pick_up_date', true);
+            if ((!empty($trackingDate)) && (!empty($trackingName)) && (!empty($trackingCode))) {
+                echo '<p>Your order has been shipped up by <b>' . $trackingName . '</b> on <b>' . $trackingDate . '</b>. Your track code is <b>' . $trackingCode . '.</b></p>';
+            }
+        }
+    }
+
+    public function asgard_wp_mail_from_name( $name ){
+        return 'Arrow Meds';
+    }
+    public function asgard_wp_mail_from( $email ){
+        return 'admin@arrowmeds.com';
+    }
+    public function asgard_change_cvc_cvv_text( $default_fields, $id ){
+        $search = 'Card code';
+        $replace = 'CVV Code';
+        $default_fields = str_replace($search, $replace, $default_fields);
+        $search1 = 'CVC';
+        $replace1 = 'CVV';
+        $default_fields = str_replace($search1, $replace1, $default_fields);
+        return $default_fields;
+    }
+    public function asgard_remove_output_structured_data(){
+        remove_action('wp_footer', array(WC()->structured_data, 'output_structured_data'), 10); // Frontend pages
+        remove_action('woocommerce_email_order_details', array(WC()->structured_data, 'output_email_structured_data'), 30); // Emails
+    }
+    public function asgard_change_woocommerce_order_number( $order_id ){
+        $prefix = '300';
+        $new_order_id = $prefix . $order_id;
+        return $new_order_id;
+    }
+    public function asgard_wc_cancelled_order_add_customer_email( $recipient, $order ){
+        return $recipient . ',' . $order->billing_email;
+    }
+    public function asgard_custom_shop_order_search_results_filter( $order_ids, $term, $search_fields ){
+        global $wpdb;
+        if(strpos($term, '#') !== false){
+            $term = preg_replace('/#[[:<:]]300/', '', $term); //  <===  <===  <===  Your change
+        } else{
+            $term = preg_replace('/[[:<:]]300/', '', $term); //  <===  <===  <===  Your change
+        }
+        $order_ids = array();
+
+        if (is_numeric($term)) {
+            $order_ids[] = absint($term);
+        }
+
+        if (!empty($search_fields)) {
+            $order_ids = array_unique(
+                array_merge(
+                    $order_ids,
+                    $wpdb->get_col(
+                        $wpdb->prepare(
+                            "SELECT DISTINCT p1.post_id FROM {$wpdb->postmeta} p1 WHERE p1.meta_value LIKE %s AND p1.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", // @codingStandardsIgnoreLine
+                            '%' . $wpdb->esc_like(wc_clean($term)) . '%'
+                        )
+                    ),
+                    $wpdb->get_col(
+                        $wpdb->prepare(
+                            "SELECT order_id
+                                FROM {$wpdb->prefix}woocommerce_order_items as order_items
+                                WHERE order_item_name LIKE %s",
+                            '%' . $wpdb->esc_like(wc_clean($term)) . '%'
+                        )
+                    )
+                )
+            );
+        }
+        return $order_ids;
+    }
+
+    public function asgard_register_shipped_order_status(){
+        register_post_status('wc-shipped', array(
+            'label' => 'Shipped',
+            'public' => true,
+            'show_in_admin_status_list' => true,
+            'show_in_admin_all_list' => true,
+            'exclude_from_search' => false,
+            'label_count' => _n_noop('Shipped <span class="count">(%s)</span>', 'Shipped <span class="count">(%s)</span>')
+        ));
+    }
+    public function asgard_add_shipped_to_order_statuses($order_statuses){
+        $new_order_statuses = array();
+        foreach ($order_statuses as $key => $status) {
+            $new_order_statuses[$key] = $status;
+            if ('wc-processing' === $key) {
+                $new_order_statuses['wc-shipped'] = 'Shipped';
+            }
+        }
+        return $new_order_statuses;
+    }
+
+    public function asgard_shipped_status_custom_notification($order_id, $from_status, $to_status, $order){
+        if ($order->has_status('shipped')) {
+
+            // Getting all WC_emails objects
+            $email_notifications = WC()->mailer()->get_emails();
+
+            // Sending the customized email
+            $email_notifications['WC_Email_Customer_Shipped_Order']->trigger($order_id);
+        }
+    }
+    public function asgard_filter_woocommerce_email_actions($actions){
+        $actions[] = 'woocommerce_order_status_wc-shipped';
+        return $actions;
+    }
+    public function asgard_add_shipped_order_woocommerce_email($email_classes){
+        // include our custom email class
+        wc_get_template_part('class', 'wc-email-customer-shipped-order');
+
+        // add the email class to the list of email classes that WooCommerce loads
+        $email_classes['WC_Email_Customer_Shipped_Order'] = new WC_Email_Customer_Shipped_Order();
+
+        return $email_classes;
+    }
+    public function asgard_change_password_strength($strength){
+        /* * Strength Settings
+         * 4 = Strong
+         * 3 = Medium (default)
+         * 2 = Also Weak but a little stronger
+         * 1 = Password should be at least Weak
+         * 0 = Very Weak / Anything*/
+        return 2;
+    }
+    public function asgard_change_the_text_for_password_hint($hint){
+        $hint = 'Hint: The password should be at least 7 characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; )';
+        return $hint;
+    }
+    public function asgard_admin_email_recipient_filter_function($recipient, $object){
+        $recipient = $recipient . ', admin@arrowmeds.com';
+        return $recipient;
+    }
+
+    public function asgard_add_feedback_order_woocommerce_email($email_classes) {
+
+        // add the email class to the list of email classes that WooCommerce loads
+        $email_classes['WC_Email_Customer_Feedback_Order'] = include 'woocommerce/class-wc-email-customer-feedback-order.php';
+
+        return $email_classes;
+    }
+    public function asgard_add_every_seven_days($schedules) {
+
+        $schedules['every_seven_days'] = array(
+            'interval' => 604800,
+            'display' => __('Every 7 days', 'textdomain')
+        );
+        return $schedules;
+    }
+    public function asgard_every_seven_days_event_func() {
+
+        global $wpdb;
+//        global $linea_Options;
+        $range = 10080; // 7 days in minutes
+        $completed_orders = bbloomer_get_completed_orders_before_after(strtotime('-' . absint($range) . ' MINUTES', current_time('timestamp')), current_time('timestamp'));
+        if ($completed_orders) {
+            foreach ($completed_orders as $order_id) {
+                ob_start();
+                $email_data = '';
+                $template = 'emails/email-header-feedback.php';
+                $email_heading = "Give Rating";
+                wc_get_template($template, array('email_heading' => $email_heading));
+                // 1) Get the Order object
+                $order = wc_get_order($order_id);
+                // Get the order meta data in an unprotected array
+                $email_ad = $order->get_billing_email();
+                $order_items = $order->get_items();
+                // OUTPUT
+                ?>
+                <p><?php printf(esc_html__('Dear %s,', 'woocommerce'), esc_html($order->get_billing_first_name())); ?></p>
+                <?php /* translators: %s: Order number */ ?>
+                <?php $blog_title = get_bloginfo('name'); ?>
+                <p>Thank you for choosing <a href="<?php echo home_url(); ?>" target="_blank"><?php echo $blog_title; ?></a>
+                </p>
+                <p><?php esc_html_e('To improve the satisfaction of our customers, to collect reviews for better service with best quality products.', 'woocommerce'); ?></p>
+                <p>
+                    <?php esc_html_e('All reviews, good, bad or otherwise will be visible immediately.', 'woocommerce'); ?>
+                </p>
+                <?php
+                foreach ($order_items as $item_id => $item) {
+                    $product = $item->get_product();
+                    $is_visible = $product && $product->is_visible();
+                    $product_permalink = apply_filters('woocommerce_order_item_permalink', $is_visible ? $product->get_permalink($item) : '', $item, $order);
+                    ?>
+                    <p>
+                        <a href="<?php echo $product_permalink . '#comments' ?>" style="color:#0c59f2;font-weight:normal;line-height:1em;text-decoration:underline;font-size:18px;">Click here to review us on </a><?php //echo apply_filters('woocommerce_order_item_name', $product_permalink ? sprintf('<a href="%s#comments" style="color:#0c59f2;font-weight:normal;line-height:1em;text-decoration:underline;font-size:18px;" target="_blank">%s</a>', $product_permalink, $item->get_name()) : $item->get_name(), $item, $is_visible); ?>
+                        <?php
+//                        $trustImage = $linea_Options['feedback_image']['url'];
+                        ?><br/>
+<!--                        <a href="--><?php //echo $product_permalink . '#comments' ?><!--" target="_blank"><img src="--><?php //echo $trustImage; ?><!--"  width="--><?php //echo $linea_Options['feedback_image']['width']; ?><!--" height="--><?php //echo $linea_Options['feedback_image']['height']; ?><!--" /></a>-->
+                    </p>
+                    <?php
+                }?>
+                <p>
+                    <b>Thanks for your time,</b><br/>
+                    Team ArrowMeds
+                </p>
+                <p><b>Please note:</b> This email is sent automatically, so you may have received this review invitation before the arrival of your package or service. In this case, you are welcome to wait with writing your review until your package or service arrives.</p>
+                <p></p>
+                <?php
+
+                $template_footer = 'emails/email-footer.php';
+                wc_get_template($template_footer);
+                $email_data = ob_get_clean();
+                // To send HTML mail, the Content-type header must be set
+                $headers = 'MIME-Version: 1.0' . "\r\n";
+
+                $mailer = WC()->mailer();
+                $subject = __("⭐ ⭐ ⭐ ⭐ ⭐ How many stars would you give our Medicine(s)?", 'woocommerce');
+                $headers = "Content-Type: text/html\r\n";
+                //send the email through wordpress
+                $mailer->send($email_ad, $subject, $email_data, $headers);
+            }
+
+        }
+    }
+
+    public function asgard_add_view_counter(){
+        if ( shortcode_exists( 'post-views' ) ) {
+		    ?>
+		    <div class="d-flex align-items-center justify-content-between">
+            <div class="woocommerce-product-rating view-counter d-flex align-items-center">
+			    <?php echo do_shortcode( '[post-views]' ).'<div class="ms-2 viewd"> Viewed</div>'; ?>
+            </div>
+			<div class="woocommerce-product-rating">
+			    <a class="d-flex align-items-center text-primary lh-1" href="https://tawk.to/arrowmeds" target="_blank">
+                    <svg width="20" height="20" fill="var(--bs-primary)" class="me-2"><use href="#icon-chat"></use></svg>
+					Talk to Expert
+				</a>
+            </div>
+                </div>
+		    <?php
+	    }
+    }
+
+    public function asgard_add_mg_attribute_in_order_email_($item_name, $item){
+        $item_meta_data = $item->get_meta_data();
+        $item_attribute = (!empty($item_meta_data[0]->key) ? $item_meta_data[0]->key: '');
+        return $item_name.'&nbsp;('.$item_attribute.')';
+    }
+    public function asgard_single_product_author(){
+         global $product;
+// 		echo '<pre>';
+// 		print_r($product);
+// 		echo '</pre>';
+ 		$user = get_avatar(get_the_author_meta('ID'), 30, '', '', ['class'=>'rounded-pill']);
+		$modifiedDate = $product->get_date_modified()->date('d/m/Y');
+		?>
+		<div class="product-author product-author d-flex align-items-center flex-wrap mb-3 p-3 border border-secondary border-opacity-50 rounded-4">
+			<div class="last-updated w-100 fs-12">
+				<span>Last Updated on </span>
+				<time><?php echo $modifiedDate; ?></time>
+			</div>
+			<div class="reviwed me-2 fs-6 d-flex align-items-center lh-1">
+				<svg class="me-1" width="20" height="20" fill="var(--bs-primary)"><use href="#icon-circle-check"></use></svg>
+				 Medically Reviewed by
+			</div>
+			<a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ); ?>" class="author-profile d-inline-flex align-items-center bg-primary-subtle rounded-pill text-decoration-none text-primary pe-3 text-capitalize">
+				<div class="author-asgard">
+					<?php echo $user; ?>
+				</div>
+				<span class="ms-2 name"><?php the_author(); ?></span>
+			</a>
+		</div>
+		<?php
+    }
+
+    public function asgard_woocommerce_review_order_before_payment(){
+        echo '<img src="' . ASGARD_BUILD_IMG_URI . '/secure-with-macfee.webp" alt="Secure with macfee" width="229" height="37" class="img-fluid float-start mt-4 ms-3 mb-2">';
+    }
+    public function asgard_display_variation_in_table_format_amp(){
+        ?>
+        <div class="product-variation-display-section table-responsive">
+            <?php
+            global $product;
+            $id = $product->get_id();
+            $product = new WC_Product_Variable($id);
+            // get the product variations
+            $product_variations = $product->get_available_variations();
+            $attributes = $product->get_attributes();
+            //            echo "<pre>";
+            //            print_r($attributes);
+            foreach ($attributes as $key => $attribute) {
+                if ($attribute->get_variation()) {
+                    $attribute_name = $attribute->get_name();
+                }
+            }
+            if (!empty($product_variations)) {
+                ?>
+                <table class="product_type">
+                    <tbody>
+                    <tr class="main-tr">
+                        <td class="block">
+                            <table class="table footable footable-1 breakpoint-lg table-bordered"
+                                   data-toggle-column="last">
+                                <thead>
+                                <tr class="row-title">
+                                    <th colspan="5"><h2 class="variation-product-title"><?php echo $product->get_title() . ' - ' . $attribute_name; ?></h2>
+                                    </th>
+                                </tr>
+                                <tr class="footable-header">
+                                    <th class="footable-first-visible"><?php echo $attribute_name; ?></th>
+                                    <th>Price:</th>
+                                    <th class="hide-mobile">Price/unit</th>
+                                    <th>Quantity</th>
+                                    <th class="footable-last-visible">Add To Cart</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                foreach ($product_variations as $key => $product_variation) {
+                                    $attribute = array_values($product_variation['attributes']);
+                                    ?>
+                                    <tr>
+                                        <td class="footable-first-visible"><?php echo($attribute[0]); ?></td>
+                                        <td> <?php echo $product_variation['price_html']; ?></td>
+                                        <td class="hide-mobile">
+                                            <?php
+                                            $tablets = explode(' ', $attribute[0]);
+                                            $unit_price = $product_variation['display_price'] / $tablets[0];
+                                            $final_unit = round(number_format($unit_price, 2), 2);
+                                            echo '$' . $final_unit . ' /Piece';
+                                            ?>
+                                        </td>
+                                        <td>
+											<select class="form-control select-qty">
+<!--                                             <select class="form-control select-qty"> -->
+                                                <option selected="selected">1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </td>
+                                        <td class="footable-last-visible">
+                                            <?php
+                                            $attr = '';
+                                            $attrs = $product_variation['attributes'];
+                                            foreach ($attrs as $key => $attr) {
+                                                if (!empty($attr)) {
+                                                    $attr = $key . '=' . $attr;
+                                                } else {
+                                                    $attr .= '&' . $key . '=' . $attr;
+                                                }
+                                            }
+                                            $key = '_stock_status';
+                                            $checkStock = get_post_meta($product_variation["variation_id"], $key, true);
+                                            if (!empty($checkStock) && $checkStock == 'outofstock') {
+                                                ?><span class="text-danger">Out of stock</span><?php
+                                            } else {
+                                                ?>
+                                            <a href="<?php echo get_the_permalink() . '?add-to-cart=' . $id . '&quantity=1&variation_id=' . $product_variation["variation_id"] . '&' . $attr . ''; ?>" class="btn btn-primary btn-add-to-cart-ajax">add to cart</a><?php
+                                            }
+                                            ?>
+                                            <!--<a href="<?php echo get_the_permalink() . '?add-to-cart=' . $id . '&quantity=1&variation_id=' . $product_variation["variation_id"] . '&' . $attr . ''; ?>" class="btn btn-primary btn-add-to-cart-ajax">add to cart</a>-->
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+
+    public function asgard_amp_search_for_product(){
+        if(!is_front_page()) {
+		 ?>
+        <div class="visible-xs mobile-search-new-place amp-search">
+            <form method="GET" id="searchform" action="<?php echo home_url( '/' ); ?>" target="_top" on="" novalidate>
+                <input type="text"  name="s" id="s" placeholder='Search Product' />
+                <input type="submit" id="searchsubmit" />
+                <input type="hidden" name="post_type" value="product">
+            </form>
+        </div>
+        <?php
+        }
+    }
+
+    public function asgard_kt_amp_header_content_up_function(){
+    ?>
+	<div class="custom_amp_support">
+		<div class="amp_support_left">
+			<a href="tel:+1(877) 925-1112">
+				<p>
+					+1(877) 925-1112
+				</p>
+				<span>Call Us</span>
+			</a>
+		</div>
+		<div class="amp_support_right">
+			<a href="https://api.whatsapp.com/send?phone=18779251112&text=Hi,%20Arrowmeds,%20Team" target="_blank">
+				<p>
+					+1(877) 925-1112
+				</p>
+				<span>Click To Chat</span>
+			</a>
+		</div>
+	</div>
+	<?php
+    }
 }
+
