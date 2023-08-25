@@ -51,6 +51,9 @@ const plugins = ( argv ) => [
     //         path.join(__dirname, '../inc/**/*.php'),
     //         path.join(__dirname, '../template-parts/**/*.php'),
     //         path.join(__dirname, '../template-parts/*.php'),
+    //         path.join(__dirname, '../woocommerce/**/**/*.php'),
+    //         path.join(__dirname, '../woocommerce/**/*.php'),
+    //         path.join(__dirname, '../woocommerce/*.php'),
     //         path.join(__dirname, 'node_modules/bootstrap/**/*.scss'), // Add the path to Bootstrap SCSS files
     //     ]),
     // }),

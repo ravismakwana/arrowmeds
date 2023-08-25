@@ -16,10 +16,10 @@ import { __ } from '@wordpress/i18n';
  * @type {Array}
  */
 const layoutStyleQuote = [
-    {
-        name: 'layout-dark-background',
-        label: __( 'Layout style dark background', 'asgard' ),
-    },
+	{
+		name: 'layout-dark-background',
+		label: __('Layout style dark background', 'asgard'),
+	},
 ];
 
 /**
@@ -28,17 +28,14 @@ const layoutStyleQuote = [
  * @type {Array}
  */
 const layoutStyleButton = [
-    {
-        name: 'layout-border-blue-fill',
-        label: __( 'Blue outline', 'asgard' ),
-    },
-    {
-        name: 'layout-border-white-no-fill',
-        label: __(
-            'White outline - to be used with dark background',
-            'asgard'
-        ),
-    },
+	{
+		name: 'layout-border-blue-fill',
+		label: __('Blue outline', 'asgard'),
+	},
+	{
+		name: 'layout-border-white-no-fill',
+		label: __('White outline - to be used with dark background', 'asgard'),
+	},
 ];
 
 /**
@@ -47,8 +44,8 @@ const layoutStyleButton = [
  * @return {void}
  */
 const deRegister = () => {
-    unregisterBlockStyle( 'core/quote', 'large' );
-    unregisterBlockStyle( 'core/button', 'outline' );
+	unregisterBlockStyle('core/quote', 'large');
+	unregisterBlockStyle('core/button', 'outline');
 };
 
 /**
@@ -57,19 +54,19 @@ const deRegister = () => {
  * @return {void}
  */
 const register = () => {
-    layoutStyleQuote.forEach( ( layoutStyle ) =>
-        registerBlockStyle( 'core/quote', layoutStyle )
-    );
+	layoutStyleQuote.forEach((layoutStyle) =>
+		registerBlockStyle('core/quote', layoutStyle)
+	);
 
-    layoutStyleButton.forEach( ( layoutStyle ) =>
-        registerBlockStyle( 'core/button', layoutStyle )
-    );
+	layoutStyleButton.forEach((layoutStyle) =>
+		registerBlockStyle('core/button', layoutStyle)
+	);
 };
 
 /**
  * Register and unregister styles on dom ready.
  */
 wp.domReady( () => {
-    deRegister();
-    register();
+	deRegister();
+	register();
 } );

@@ -18,6 +18,7 @@ class Archive_Settings {
 	protected function setup_hooks() {
 		// actions and filters
 		add_filter( 'pre_get_posts', [ $this, 'change_archive_posts_per_page' ] );
+		add_filter( 'posts_search', [ $this, '__search_by_title_only' ], 10 , 2 );
 	}
 	/**
 	 * Change Posts Per Page for Archive.
@@ -39,5 +40,27 @@ class Archive_Settings {
 		}
 
 		return $query;
+	}
+
+	function __search_by_title_only( $search, $wp_query ) {
+		global $wpdb;
+		if(empty($search)) {
+			return $search; // skip processing - no search term in query
+		}
+		$q = $wp_query->query_vars;
+		$n = !empty($q['exact']) ? '' : '%';
+		$search =
+		$searchand = '';
+		foreach ((array)$q['search_terms'] as $term) {
+			$term = esc_sql($wpdb->esc_like($term));
+			$search .= "{$searchand}($wpdb->posts.post_title LIKE '{$n}{$term}{$n}')";
+			$searchand = ' AND ';
+		}
+		if (!empty($search)) {
+			$search = " AND ({$search}) ";
+			if (!is_user_logged_in())
+				$search .= " AND ($wpdb->posts.post_password = '') ";
+		}
+		return $search;
 	}
 }

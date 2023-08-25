@@ -24,13 +24,6 @@ get_header();
 			get_template_part( 'template-parts/content', 'none' );
 		}
 		?>
-
-    <div class="row">
-        <div class="col-12 col-sm-9 order-2">
-
-        </div>
-        <div class="col-12 col-sm-3"></div>
-    </div>
 </div>
 <?php get_footer(); ?>
 

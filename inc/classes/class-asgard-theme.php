@@ -26,6 +26,7 @@ class ASGARD_THEME {
 		Asgard_Woocommerce::get_instance();
 		Asgard_Shortcodes::get_instance();
 		Store_Information::get_instance();
+		Schema::get_instance();
 		$this->setup_hooks();
 	}
 
@@ -77,6 +78,12 @@ class ASGARD_THEME {
 
 		// Removed core block patterns
 		remove_theme_support('core-block-patterns');
+
+		remove_theme_support( 'wc-product-gallery-zoom' );
+		remove_theme_support( 'wc-product-gallery-lightbox' );
+		remove_theme_support( 'wc-product-gallery-slider' );
+		// Add WooCommerce Support
+		add_theme_support( 'woocommerce' );
 
 		global $content_width;
 		if(!isset($content_width)) {

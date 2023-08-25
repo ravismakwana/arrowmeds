@@ -8,10 +8,10 @@ import './posts/loadmore';
 import '../sass/main.scss';
 
 // Images
-import '../img/PhotoFunia1.jpg';
 import '../img/patterns/bg.jpeg';
 import '../img/patterns/c1-150x150.jpeg';
 import '../img/patterns/c2-150x150.jpeg';
 import '../img/patterns/c3-150x150.jpeg';
 import '../img/email.webp';
 import '../img/payment.webp';
+import '../img/secure-with-macfee.webp';
