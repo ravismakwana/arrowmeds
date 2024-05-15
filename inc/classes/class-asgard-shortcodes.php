@@ -18,7 +18,7 @@ class Asgard_Shortcodes {
 
 	protected function setup_hooks() {
 		// shortcodes
-		add_shortcode( 'display_mega_menu', [ $this, 'mega_menu_function' ] );
+//		add_shortcode( 'display_mega_menu', [ $this, 'mega_menu_function' ] );
 		add_shortcode( 'current_year', [ $this, 'asgard_current_year' ] );
 	}
 

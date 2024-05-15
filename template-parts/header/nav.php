@@ -10,18 +10,18 @@ $header_menu_id = $menu_class->get_menu_id( 'asgard-main-menu' );
 
 $header_menus = wp_get_nav_menu_items( $header_menu_id );
 ?>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-main">
+<nav class="navbar navbar-expand-lg  navbar-main border-bottom border-opacity-10 border-success">
     <div class="container position-relative">
-        <div class="mega-menu-title text-white bg-primary d-flex align-items-center px-4 py-3 mt-n3 mb-n2 position-relative">
-            <!-- Offcanvas code is add on footer.php -->
-            <a data-bs-toggle="offcanvas" href="#offcanvasAM" role="button" aria-controls="offcanvasAM"
+        <div class="mega-menu-title d-flex align-items-center position-relative">
+            <!-- Offcanvas code is added on footer.php -->
+            <a data-bs-toggle="offcanvas" href="#offcanvasGMA" role="button" aria-controls="offcanvasGMA"
                class="canvas-btn">
-                <svg width="30" height="30">
+                <svg width="30" height="30" fill="green">
                     <use href="#icon-bar"></use>
                 </svg>
             </a>
 
-            <span class="ms-3 fs-18 text-uppercase all-cate-text pt-0 pb-0 d-none d-sm-none d-md-block lh-1"> All Categories </span>
+            <span class="nav-link fs-14 text-uppercase all-cate-text pt-0 pb-0 d-none d-sm-none d-md-block lh-1"> All Categories </span>
         </div>
         <div class="d-block d-sm-block d-md-none">
 			<?php
@@ -44,20 +44,23 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
 					// Compare menu object with current page menu object
 					$active = ( $menu_item->object_id == get_queried_object_id() ) ? 'active' : '';
 					if ( ! $menu_item->menu_item_parent ) {
-						$child_menu_items = $menu_class->get_child_menu_items( $header_menus, $menu_item->ID );
-						$has_children     = ! empty( $child_menu_items ) && is_array( $child_menu_items );
+						$child_menu_items   = $menu_class->get_child_menu_items( $header_menus, $menu_item->ID );
+						$has_children       = ! empty( $child_menu_items ) && is_array( $child_menu_items );
+						$has_sub_menu_class = ! empty( $has_children ) ? 'has-submenu' : '';
+						$link_target        = ! empty( $menu_item->target ) && '_blank' === $menu_item->target ? '_blank' : '_self';
 						if ( ! $has_children ) {
 							?>
                             <li class="nav-item">
-                                <a class="nav-link px-lg-3 px-md-0 nav-link text-decoration-none <?php echo $active; ?>"
+                                <a class="text-uppercase fs-14 nav-link px-lg-3 px-md-0 nav-link text-decoration-none <?php echo $active; ?>"
                                    aria-current="page"
+                                   target="<?php echo esc_attr( $link_target ); ?>"
                                    href="<?php echo esc_url( $menu_item->url ); ?>"><?php echo esc_html( $menu_item->title ); ?></a>
                             </li>
 							<?php
 						} else {
 							?>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle px-lg-3 px-md-0 nav-link text-decoration-none"
+                                <a class="text-uppercase fs-14 nav-link dropdown-toggle px-lg-3 px-md-0 nav-link text-decoration-none"
                                    href="<?php echo esc_url( $menu_item->url ); ?>" id="navbarDropdown" role="button"
                                    data-bs-toggle="dropdown" aria-expanded="false">
 									<?php echo esc_html( $menu_item->title ); ?>
@@ -67,7 +70,7 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
 										$activeChild = ( $child_menu_item->object_id == get_queried_object_id() ) ? 'active' : '';
 										?>
                                         <li class="sub-menu-items"><a
-                                                    class="dropdown-item px-3 text-decoration-none <?php echo $activeChild; ?>"
+                                                    class="fs-14 dropdown-item px-3 text-decoration-none <?php echo $activeChild; ?>"
                                                     href="<?php echo esc_url( $child_menu_item->url ); ?>"><?php echo esc_html( $child_menu_item->title ); ?></a>
                                         </li>
 									<?php } ?>
@@ -80,7 +83,7 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
 				?>
                 <li class="nav-item d-block d-sm-block d-md-none d-lg-none"><a
                             href="<?php echo get_permalink( wc_get_page_id( 'myaccount' ) ); ?>"
-                            class="nav-link px-lg-3 px-md-0 nav-link text-decoration-none">My account</a></li>
+                            class="text-uppercase fs-14 nav-link px-lg-3 px-md-0 nav-link text-decoration-none">My account</a></li>
 				<?php
 				if ( is_user_logged_in() ) {
 					if ( class_exists( 'WooCommerce' ) ) {
@@ -92,7 +95,7 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
                     <li class="nav-item d-block d-sm-block d-md-none d-lg-none">
 
                         <a href="<?php echo esc_url( $logout_link ); ?>"
-                           class="nav-link px-lg-3 px-md-0 nav-link text-decoration-none ">Logout</a>
+                           class="text-uppercase fs-14 nav-link px-lg-3 px-md-0 nav-link text-decoration-none ">Logout</a>
 
                     </li>
 					<?php
@@ -114,14 +117,14 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
 					?>
                     <li class="nav-item d-block d-sm-block d-md-none d-lg-none"><a
                                 href="<?php echo esc_url( $login_link ); ?>"
-                                class="nav-link px-lg-3 px-md-0 nav-link text-decoration-none ">Login</a>
+                                class="text-uppercase fs-14 nav-link px-lg-3 px-md-0 nav-link text-decoration-none ">Login</a>
                     </li>
 					<?php
 					if ( $register_link ) {
 						?>
                         <li class="nav-item d-block d-sm-block d-md-none d-lg-none"><a
                                     href="<?php echo esc_url( $register_link ); ?>"
-                                    class="nav-link px-lg-3 px-md-0 nav-link text-decoration-none ">Register</a>
+                                    class="text-uppercase fs-14 nav-link px-lg-3 px-md-0 nav-link text-decoration-none ">Register</a>
                         </li>
 						<?php
 					}
@@ -132,16 +135,16 @@ $header_menus = wp_get_nav_menu_items( $header_menu_id );
 			?>
             <div class="offer-zone pb-sm-4 pb-md-4 pb-lg-0">
                 <?php
-                $category = get_term_by( 'slug', 'offer-zone', 'product_cat' );
-                if(!empty($category)) {
-	                $cat_id = $category->term_id;
-	                $category_link = get_category_link( $cat_id );
-                } else {
-                    echo 'category slug not found';
-                }
+//                $category = get_term_by( 'slug', 'offer-zone', 'product_cat' );
+//                if(!empty($category)) {
+//	                $cat_id = $category->term_id;
+//	                $category_link = get_category_link( $cat_id );
+//                } else {
+//                    echo 'category slug not found';
+//                }
 
                 ?>
-                <a href="<?php echo esc_url( $category_link ); ?>" class="badge text-bg-danger fs-14 text-decoration-none fw-normal">Offer Zone</a>
+<!--                <a href="--><?php //echo esc_url( $category_link ); ?><!--" class="badge text-bg-danger fs-14 text-decoration-none fw-normal">Offer Zone</a>-->
             </div>
         </div>
         <div class="show_mega_menu_block bg-white position-absolute start-0 end-0 mx-auto my-0 border-start border-end border-bottom border-opacity-25 border-secondary shadow rounded-bottom d-none invisible"

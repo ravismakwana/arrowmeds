@@ -19,6 +19,8 @@ const entry = {
     editor: JS_DIR + '/editor.js',
     blocks: JS_DIR + '/blocks.js',
     author: JS_DIR + '/author.js',
+    home: JS_DIR + '/home.js',
+    product: JS_DIR + '/product.js',
 };
 const output = {
     path: BUILD_DIR,

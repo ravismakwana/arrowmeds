@@ -51,7 +51,7 @@ class Sidebar {
 				'description'   => __( 'A short description of the sidebar.', 'asgard' ),
 				'before_widget' => '<div id="%1$s" class="widget %2$s">',
 				'after_widget'  => '</div>',
-				'before_title'  => '<h3 class="widget-title text-white h6 text-uppercase mb-3">',
+				'before_title'  => '<h3 class="h4 widget-title text-white mb-4 fw-normal">',
 				'after_title'   => '</h3>',
 			]
 		);
@@ -62,7 +62,7 @@ class Sidebar {
 				'description'   => __( 'A short description of the sidebar.', 'asgard' ),
 				'before_widget' => '<div id="%1$s" class="widget %2$s">',
 				'after_widget'  => '</div>',
-				'before_title'  => '<h3 class="widget-title text-white h6 text-uppercase mb-3">',
+				'before_title'  => '<h3 class="h4 widget-title text-white mb-4 fw-normal">',
 				'after_title'   => '</h3>',
 			]
 		);
@@ -73,7 +73,7 @@ class Sidebar {
 				'description'   => __( 'A short description of the sidebar.', 'asgard' ),
 				'before_widget' => '<div id="%1$s" class="widget %2$s">',
 				'after_widget'  => '</div>',
-				'before_title'  => '<h3 class="widget-title text-white h6 text-uppercase mb-3">',
+				'before_title'  => '<h3 class="h4 widget-title text-white mb-4 fw-normal">',
 				'after_title'   => '</h3>',
 			]
 		);
@@ -84,7 +84,7 @@ class Sidebar {
 				'description'   => __( 'A short description of the sidebar.', 'asgard' ),
 				'before_widget' => '<div id="%1$s" class="widget %2$s">',
 				'after_widget'  => '</div>',
-				'before_title'  => '<h3 class="widget-title text-white h6 text-uppercase mb-3">',
+				'before_title'  => '<h3 class="h4 widget-title text-white mb-4 fw-normal">',
 				'after_title'   => '</h3>',
 			]
 		);

@@ -56,7 +56,7 @@ $text_lighter_20 = wc_hex_lighter( $text, 20 );
 }
 
 #template_header {
-	background-color: <?php echo esc_attr( $base ); ?>;
+	background-color: <?php echo esc_attr( $base_lighter_40 ); ?>;
 	border-radius: 3px 3px 0 0 !important;
 	color: <?php echo esc_attr( $base_text ); ?>;
 	border-bottom: 0;
@@ -227,7 +227,7 @@ h2 small {
 }
 #bg-cyan-top {
    text-align:center;
-   background-color: #55C0A1;
+   background-color: <?php echo esc_attr( $base ); ?>;
    margin: 0 0 15px;
 }
 #bg-cyan-top tr td {
@@ -242,7 +242,7 @@ h2 small {
 }
 #bg-cyan-bottom {
    text-align:center;
-   background-color: #55C0A1;
+   background-color: <?php echo esc_attr( $base ); ?>;
    margin: 0 0 0;
 }
 #bg-cyan-bottom tr td {

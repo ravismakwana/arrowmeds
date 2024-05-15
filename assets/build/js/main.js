@@ -1,2 +1,325 @@
-!function(){var n={950:function(){function r(t){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){for(var n=0;n<e.length;n++){var o=e[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(t,function(t){t=function(t,e){if("object"!==r(t)||null===t)return t;var n=t[Symbol.toPrimitive];if(void 0===n)return("string"===e?String:Number)(t);n=n.call(t,e||"default");if("object"!==r(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}(t,"string");return"symbol"===r(t)?t:String(t)}(o.key),o)}}var i;i=jQuery,new(function(){function t(){if(!(this instanceof t))throw new TypeError("Cannot call a class as a function");this.initMenu(),this.canvasMenu(),this.megaCategoryMenu(),this.bookmarkmsg()}var e,n,o;return e=t,(n=[{key:"initMenu",value:function(){i(".navbar-main").length&&i(".navbar-main .navbar-nav a").on("click",function(){i(".navbar-main .navbar-nav").find("li.active a").removeClass("active"),i(this).parent("li a").addClass("active")})}},{key:"canvasMenu",value:function(){i(".canvas-btn").length&&i(".canvas-btn").on("click",function(t){i(".accordion-menu .sub-menu").hide()}),i(".accordion-menu").length&&(i(".accordion-menu li.menu-item.active .arrow").click(),i(document).on("click",".accordion-menu .arrow",function(){var t=jQuery(this).parent();jQuery(this).next().stop().slideToggle(),t.toggleClass("open")}))}},{key:"megaCategoryMenu",value:function(){i(".mega-menu-title").length&&(i(".navbar-main .mega-menu-title").hover(function(){i("#mega_menu_block").addClass("d-block visible"),i("#mega_menu_block").removeClass("d-none invisible")},function(){i("#mega_menu_block").removeClass("d-block visible"),i("#mega_menu_block").addClass("d-none invisible")}),i("#mega_menu_block").hover(function(){i(this).addClass("d-block visible"),i(this).removeClass("d-none invisible")},function(){i(this).removeClass("d-block visible"),i(this).addClass("d-none invisible")}))}},{key:"bookmarkmsg",value:function(){i(".bookmark-btn").length&&i(document).on("click",".bookmark-btn",function(){alert("Press Ctrl+D to bookmark this page.")})}}])&&a(e.prototype,n),o&&a(e,o),Object.defineProperty(e,"prototype",{writable:!1}),t}())},954:function(){function r(t){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){for(var n=0;n<e.length;n++){var o=e[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(t,function(t){t=function(t,e){if("object"!==r(t)||null===t)return t;var n=t[Symbol.toPrimitive];if(void 0===n)return("string"===e?String:Number)(t);n=n.call(t,e||"default");if("object"!==r(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}(t,"string");return"symbol"===r(t)?t:String(t)}(o.key),o)}}var i;i=jQuery,new(function(){function e(){var t;if(!(this instanceof e))throw new TypeError("Cannot call a class as a function");this.ajaxUrl=null!=(t=null==(t=ajax_object)?void 0:t.ajax_url)?t:"",this.ajaxNonce=null!=(t=null==(t=ajax_object)?void 0:t.ajax_nonce)?t:"",this.loadMoreBtn=i("#load-more"),this.options={root:null,rootMargin:"0px",threshold:1},this.init()}var t,n,o;return t=e,(n=[{key:"init",value:function(){var e=this;if(!this.loadMoreBtn.length)return null;new IntersectionObserver(function(t){return e.IntersectionObserverCallback(t)},this.options).observe(this.loadMoreBtn[0])}},{key:"handleLoadMorePosts",value:function(){var e=this,t=this.loadMoreBtn.data("page");if(!t)return null;var n=parseInt(t)+1;i.ajax({url:this.ajaxUrl,type:"POST",data:{page:t,action:"loadmore_posts",ajax_nonce:this.ajaxNonce},success:function(t){0===parseInt(t)?e.loadMoreBtn.remove():(e.loadMoreBtn.data("page",n),i("#load-more-content").append(t))},error:function(t){console.log(t)}})}},{key:"IntersectionObserverCallback",value:function(t){var e=this;t.forEach(function(t){null!=t&&t.isIntersecting&&e.handleLoadMorePosts()})}}])&&a(t.prototype,n),o&&a(t,o),Object.defineProperty(t,"prototype",{writable:!1}),e}())},990:function(){function r(t){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){for(var n=0;n<e.length;n++){var o=e[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(t,function(t){t=function(t,e){if("object"!==r(t)||null===t)return t;var n=t[Symbol.toPrimitive];if(void 0===n)return("string"===e?String:Number)(t);n=n.call(t,e||"default");if("object"!==r(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}(t,"string");return"symbol"===r(t)?t:String(t)}(o.key),o)}}var i;i=jQuery,new(function(){function t(){if(!(this instanceof t))throw new TypeError("Cannot call a class as a function");this.slideEffectAjax(),this.addToCartAjax(),this.dropZoneCheckout()}var e,n,o;return e=t,(n=[{key:"slideEffectAjax",value:function(){jQuery(".top-cart-contain").on("mouseenter",function(){jQuery(this).find(".top-cart-content").stop(!0,!0).show()}),jQuery(".top-cart-contain").on("mouseleave",function(){jQuery(this).find(".top-cart-content").stop(!0,!0).hide()})}},{key:"addToCartAjax",value:function(){jQuery(".btn-add-to-cart-ajax").length&&i(document).on("click",".btn-add-to-cart-ajax",function(){var t="",t={},e=jQuery(this).attr("data-product_id"),n=jQuery(this).attr("data-variation_id"),o=jQuery(this).attr("data-quantity"),r=(t=jQuery(this).attr("data-variation").split("="))[0],a=t[1],i=(t[r]=a,jQuery(this));jQuery(this).html('<div class="spinner-border spinner-border-sm text-danger" role="status"> <span class="visually-hidden">Loading...</span> </div>'),i.parent(".footable-last-visible").find(".checkout_button").remove(),console.log("Product ID = "+e+" Variation ID = "+n+" Quantity = "+o+" variation_key="+r+" variation_val="+a),jQuery.ajax({url:ajax_object.ajax_url,data:{action:"woocommerce_add_variation_to_cart",product_id:e,variation_id:n,quantity:o,variation:t},type:"POST",success:function(t){i.html('<svg width="25" height="25" fill="var(--bs-danger)"><use href="#icon-cart"></use></svg>'),setTimeout(function(){i.html('<svg class="d-block mx-auto m-0" width="25" height="25" fill="var(--bs-danger)"> <use href="#icon-cart"></use> </svg>')},1e3),console.log(ajax_object.checkout_url),i.parent(".footable-last-visible").append('<a href="'+ajax_object.checkout_url+'" title="Checkout" alt="Checkout" class="btn checkout_button p-0 ms-2" ><svg width="25" height="25" fill="var(--bs-primary)"><use href="#icon-circle-check"></use></svg></a>'),jQuery(".mini-cart").replaceWith(t.fragments[".mini-cart"]),jQuery("div.button-group-single-product").replaceWith(t.fragments["div.button-group-single-product"]),jQuery("div.widget_shopping_cart_content").replaceWith(t.fragments["div.widget_shopping_cart_content"]),jQuery(".top-cart-content").css("display","block")}})})}},{key:"dropZoneCheckout",value:function(){var t=ajax_object.ajax_url+"?action=upload_prescription",n=ajax_object.ajax_url+"?action=delete_prescription";jQuery("#uploader").length&&i("#uploader").uploadFile({url:t,fileName:"prescription",showDelete:!0,returnType:"json",multiple:!1,dragDrop:!0,uploadButtonClass:"ajax-file-upload lh-1 bg-primary",dragDropContainerClass:"ajax-upload-dragdrop w-100",allowedTypes:"pdf,jpg,jpeg,png",onSuccess:function(t,e,n,o){i("#prescription_name").val(e)},deleteCallback:function(t,e){i.post(n,{op:"delete",name:t},function(t,e,n){}),e.statusbar.hide()}})}}])&&a(e.prototype,n),o&&a(e,o),Object.defineProperty(e,"prototype",{writable:!1}),t}())}},o={};function r(t){var e=o[t];return void 0!==e||(e=o[t]={exports:{}},n[t](e,e.exports,r)),e.exports}r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,{a:e}),e},r.d=function(t,e){for(var n in e)r.o(e,n)&&!r.o(t,n)&&Object.defineProperty(t,n,{enumerable:!0,get:e[n]})},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)};!function(){"use strict";r(950),r(990),r(954)}()}();
+/******/ (function() { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/js/menu/index.js":
+/*!******************************!*\
+  !*** ./src/js/menu/index.js ***!
+  \******************************/
+/***/ (function() {
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+(function ($) {
+  var MenuOption = /*#__PURE__*/function () {
+    function MenuOption() {
+      _classCallCheck(this, MenuOption);
+      this.initMenu();
+      this.canvasMenu();
+      this.megaCategoryMenu();
+      this.bookmarkmsg();
+    }
+    return _createClass(MenuOption, [{
+      key: "initMenu",
+      value: function initMenu() {
+        if ($('.navbar-main').length) {
+          $('.navbar-main .navbar-nav a').on('click', function () {
+            $('.navbar-main .navbar-nav').find('li.active a').removeClass('active');
+            $(this).parent('li a').addClass('active');
+          });
+        }
+      }
+    }, {
+      key: "canvasMenu",
+      value: function canvasMenu() {
+        if ($('.canvas-btn').length) {
+          $('.canvas-btn').on('click', function (e) {
+            $('.accordion-menu .sub-menu').hide();
+          });
+        }
+
+        // Toggle the sub-menu on click
+        if ($('.accordion-menu').length) {
+          $('.accordion-menu li.menu-item.active .arrow').click();
+          $(document).on('click', '.accordion-menu .arrow', function () {
+            var jQueryparent = jQuery(this).parent();
+            jQuery(this).next().stop().slideToggle();
+            jQueryparent.toggleClass('open');
+          });
+        }
+      }
+    }, {
+      key: "megaCategoryMenu",
+      value: function megaCategoryMenu() {
+        if ($('.mega-menu-title').length) {
+          // Product category menu open when click on it - Start
+          $('.navbar-main .mega-menu-title').hover(function () {
+            $('#mega_menu_block').addClass('d-block visible');
+            $('#mega_menu_block').removeClass('d-none invisible');
+          }, function () {
+            $('#mega_menu_block').removeClass('d-block visible');
+            $('#mega_menu_block').addClass('d-none invisible');
+          });
+          $('#mega_menu_block').hover(function () {
+            $(this).addClass('d-block visible');
+            $(this).removeClass('d-none invisible');
+          }, function () {
+            $(this).removeClass('d-block visible');
+            $(this).addClass('d-none invisible');
+          });
+        }
+      }
+    }, {
+      key: "bookmarkmsg",
+      value: function bookmarkmsg() {
+        if ($('.bookmark-btn').length) {
+          $(document).on('click', '.bookmark-btn', function () {
+            alert('Press Ctrl+D to bookmark this page.');
+          });
+        }
+      }
+    }]);
+  }();
+  new MenuOption();
+})(jQuery);
+
+/***/ }),
+
+/***/ "./src/js/woo/index.js":
+/*!*****************************!*\
+  !*** ./src/js/woo/index.js ***!
+  \*****************************/
+/***/ (function() {
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+(function ($) {
+  var AsgardWoocommerce = /*#__PURE__*/function () {
+    function AsgardWoocommerce() {
+      _classCallCheck(this, AsgardWoocommerce);
+      this.slideEffectAjax();
+      this.addToCartAjax();
+      this.dropZoneCheckout();
+    }
+    return _createClass(AsgardWoocommerce, [{
+      key: "slideEffectAjax",
+      value: function slideEffectAjax() {
+        jQuery('.top-cart-contain').on('mouseenter', function () {
+          jQuery(this).find('.top-cart-content').stop(true, true).show();
+        });
+        jQuery('.top-cart-contain').on('mouseleave', function () {
+          jQuery(this).find('.top-cart-content').stop(true, true).hide();
+        });
+      }
+    }, {
+      key: "addToCartAjax",
+      value: function addToCartAjax() {
+        if (jQuery('.btn-add-to-cart-ajax').length) {
+          $(document).on('click', '.btn-add-to-cart-ajax', function () {
+            var data_variation,
+              product_id,
+              variation_id,
+              qty,
+              variation_key,
+              variation_val,
+              var_data = '';
+            var var_data = {};
+            product_id = jQuery(this).attr('data-product_id');
+            variation_id = jQuery(this).attr('data-variation_id');
+            qty = jQuery(this).attr('data-quantity');
+            //console.log("Product ID = "+product_id+ "Variation ID = "+ variation_id + "Quantity = "+ qty);
+            data_variation = jQuery(this).attr('data-variation');
+            var_data = data_variation.split('=');
+            variation_key = var_data['0'];
+            variation_val = var_data['1'];
+            var_data[variation_key] = variation_val;
+            //jQuery(this).prop("disabled", true);
+            var btn = jQuery(this);
+            jQuery(this).html('<div class="spinner-border spinner-border-sm text-danger" role="status"> <span class="visually-hidden">Loading...</span> </div>');
+            btn.parent('.footable-last-visible').find('.checkout_button').remove();
+            console.log('Product ID = ' + product_id + ' Variation ID = ' + variation_id + ' Quantity = ' + qty + ' variation_key=' + variation_key + ' variation_val=' + variation_val);
+            jQuery.ajax({
+              url: ajax_object.ajax_url,
+              data: {
+                action: 'woocommerce_add_variation_to_cart',
+                product_id: product_id,
+                variation_id: variation_id,
+                quantity: qty,
+                variation: var_data
+              },
+              type: 'POST',
+              success: function success(data) {
+                btn.html('<svg width="25" height="25" fill="var(--bs-danger)"><use href="#icon-cart"></use></svg>');
+                setTimeout(function () {
+                  btn.html('<svg class="d-block mx-auto m-0" width="25" height="25" fill="var(--bs-danger)"> <use href="#icon-cart"></use> </svg>');
+                }, 1000);
+                console.log(ajax_object.checkout_url);
+                btn.parent('.footable-last-visible').append('<a href="' + ajax_object.checkout_url + '" title="Checkout" alt="Checkout" class="btn checkout_button p-0 ms-2" ><svg width="25" height="25" fill="var(--bs-primary)"><use href="#icon-circle-check"></use></svg></a>');
+                jQuery('.mini-cart').replaceWith(data.fragments['.mini-cart']);
+                jQuery('div.button-group-single-product').replaceWith(data.fragments['div.button-group-single-product']);
+                jQuery('div.widget_shopping_cart_content').replaceWith(data.fragments['div.widget_shopping_cart_content']);
+                jQuery('.top-cart-content').css('display', 'block');
+              }
+            });
+          });
+        }
+      }
+    }, {
+      key: "dropZoneCheckout",
+      value: function dropZoneCheckout() {
+        var prescription_upload_url = ajax_object.ajax_url + '?action=upload_prescription';
+        var prescription_delete_url = ajax_object.ajax_url + '?action=delete_prescription';
+        /* file upload at checkout page*/
+        if (jQuery('#uploader').length) {
+          $('#uploader').uploadFile({
+            url: prescription_upload_url,
+            fileName: 'prescription',
+            showDelete: true,
+            returnType: 'json',
+            multiple: false,
+            dragDrop: true,
+            uploadButtonClass: 'ajax-file-upload lh-1 bg-primary',
+            dragDropContainerClass: 'ajax-upload-dragdrop w-100',
+            allowedTypes: 'pdf,jpg,jpeg,png',
+            onSuccess: function onSuccess(files, data, xhr, pd) {
+              $('#prescription_name').val(data);
+            },
+            deleteCallback: function deleteCallback(data, pd) {
+              $.post(prescription_delete_url, {
+                op: 'delete',
+                name: data
+              }, function (resp, textStatus, jqXHR) {});
+              pd.statusbar.hide(); //You choice.
+            }
+          });
+        }
+      }
+    }]);
+  }();
+  new AsgardWoocommerce();
+})(jQuery);
+
+/***/ }),
+
+/***/ "./src/sass/main.scss":
+/*!****************************!*\
+  !*** ./src/sass/main.scss ***!
+  \****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function() { return module['default']; } :
+/******/ 				function() { return module; };
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+!function() {
+"use strict";
+/*!************************!*\
+  !*** ./src/js/main.js ***!
+  \************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _menu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./menu */ "./src/js/menu/index.js");
+/* harmony import */ var _menu__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_menu__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _woo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./woo */ "./src/js/woo/index.js");
+/* harmony import */ var _woo__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_woo__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _sass_main_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../sass/main.scss */ "./src/sass/main.scss");
+// import './clock';
+// import './carousel';
+
+
+// import './posts/loadmore';
+
+// Styles
+
+
+// Images
+// import '../img/patterns/bg.jpeg';
+// import '../img/patterns/c1-150x150.jpeg';
+// import '../img/patterns/c2-150x150.jpeg';
+// import '../img/patterns/c3-150x150.jpeg';
+// import '../img/email.webp';
+// import '../img/payment.webp';
+// import '../img/secure-with-macfee.webp';
+}();
+/******/ })()
+;
 //# sourceMappingURL=main.js.map

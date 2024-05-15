@@ -1,7 +1,7 @@
 {
-  "name": "arrowmeds",
+  "name": "gma",
   "version": "1.0.0",
-  "description": "arrowmeds wordpress theme packages",
+  "description": "gma wordpress theme packages",
   "main": "main.js",
   "scripts": {
     "prod": "cross-env NODE_ENV=production webpack --mode production --progress",

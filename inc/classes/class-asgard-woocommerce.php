@@ -11,6 +11,8 @@ use ASGARD_THEME\Inc\Traits\Singleton;
 use WC_Product_Variable;
 use WC_AJAX;
 use WC_Email_Customer_Shipped_Order;
+use WC_Email_Customer_Feedback_Order;
+
 
 class Asgard_Woocommerce {
 	use Singleton;
@@ -115,7 +117,7 @@ class Asgard_Woocommerce {
         add_filter( 'woocommerce_package_rates', [ $this, 'asgard_hide_shipping_when_free_is_available' ], 100, 1 );
         add_filter( 'gettext', [ $this, 'asgard_translate_bic_to_swift_code' ], 10, 3 );
         //email
-        add_filter( 'woocommerce_email_order_items_args', [ $this, 'asgard_add_sku_to_wc_emails' ], 10, 1 );
+//        add_filter( 'woocommerce_email_order_items_args', [ $this, 'asgard_add_sku_to_wc_emails' ], 10, 1 );
         add_filter( 'woocommerce_cod_process_payment_order_status', [ $this, 'asgard_change_cod_payment_order_status' ], 15 );
         add_action( 'woocommerce_email_before_order_table', [ $this, 'asgard_add_content_specific_email' ], 20, 4 );
         add_action( 'wp_mail_from_name', [ $this, 'asgard_wp_mail_from_name' ], 10, 1 );
@@ -133,7 +135,6 @@ class Asgard_Woocommerce {
         add_filter( 'woocommerce_email_recipient_customer_processing_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
         add_filter( 'woocommerce_email_recipient_customer_note', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
         add_filter( 'woocommerce_email_recipient_customer_refunded_order', [ $this, 'asgard_admin_email_recipient_filter_function' ], 10, 2 );
-
 
         // Add New order status "Shipped"
         add_action( 'init', [ $this, 'asgard_register_shipped_order_status' ], 10);
@@ -1434,8 +1435,9 @@ class Asgard_Woocommerce {
 
     public function asgard_add_feedback_order_woocommerce_email($email_classes) {
 
+        wc_get_template_part('class', 'wc-email-customer-feedback-order');
         // add the email class to the list of email classes that WooCommerce loads
-        $email_classes['WC_Email_Customer_Feedback_Order'] = include 'woocommerce/class-wc-email-customer-feedback-order.php';
+        $email_classes['WC_Email_Customer_Feedback_Order'] = new WC_Email_Customer_Feedback_Order();
 
         return $email_classes;
     }
@@ -1523,10 +1525,10 @@ class Asgard_Woocommerce {
 			    <?php echo do_shortcode( '[post-views]' ).'<div class="ms-2 viewd"> Viewed</div>'; ?>
             </div>
 			<div class="woocommerce-product-rating">
-			    <a class="d-flex align-items-center text-primary lh-1" href="https://tawk.to/arrowmeds" target="_blank">
-                    <svg width="20" height="20" fill="var(--bs-primary)" class="me-2"><use href="#icon-chat"></use></svg>
-					Talk to Expert
-				</a>
+<!--			    <a class="d-flex align-items-center text-primary lh-1" href="https://tawk.to/arrowmeds" target="_blank">-->
+<!--                    <svg width="20" height="20" fill="var(--bs-primary)" class="me-2"><use href="#icon-chat"></use></svg>-->
+<!--					Talk to Expert-->
+<!--				</a>-->
             </div>
                 </div>
 		    <?php
@@ -1672,7 +1674,7 @@ class Asgard_Woocommerce {
     }
 
     public function asgard_amp_search_for_product(){
-        if(!is_front_page()) {
+        if(is_front_page() || is_product()) {
 		 ?>
         <div class="visible-xs mobile-search-new-place amp-search">
             <form method="GET" id="searchform" action="<?php echo home_url( '/' ); ?>" target="_top" on="" novalidate>

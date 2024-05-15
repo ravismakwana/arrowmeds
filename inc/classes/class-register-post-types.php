@@ -13,7 +13,7 @@ class Register_Post_Types {
 	use Singleton;
 
 	protected function __construct() {
-		$this->setup_hooks();
+//		$this->setup_hooks();
 	}
 
 	protected function setup_hooks() {

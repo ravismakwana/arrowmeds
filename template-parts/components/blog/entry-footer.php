@@ -12,11 +12,17 @@ if(empty($the_posts_terms) || !is_array($the_posts_terms)) {
 ?>
 <div class="entry-footer mt-3">
 	<?php
+	$category_count = count($the_posts_terms);
+	$category_text = _n('Category: ', 'Categories: ', $category_count);
+	echo "<span>$category_text</span>";
 		foreach ($the_posts_terms as $key => $the_posts_term) {
 			?>
-			<a href="<?php echo esc_url(get_term_link($the_posts_term->term_id)); ?>" class="btn btn-outline-secondary mr-5 mb-2"><?php echo esc_html($the_posts_term->name); ?></a>
+			<a href="<?php echo esc_url(get_term_link($the_posts_term->term_id)); ?>" class="btn-link mr-5 mb-2"><?php echo esc_html($the_posts_term->name); ?></a>
 			<?php
 
 		}
 	?>
 </div>
+<?php if(!is_single()) { ?>
+</div>
+<?php } ?>

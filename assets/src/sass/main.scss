@@ -23,7 +23,7 @@ $gray-500: #adb5bd !default;
 $gray-600: #6c757d !default;
 $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
-$gray-900: #212529 !default;
+$gray-900: #415161 !default;
 $black: #000 !default;
 
 $light: $gray-100 !default;
@@ -32,10 +32,11 @@ $container-max-widths: (
         sm: 540px,
         md: 720px,
         lg: 960px,
-        xl: 1130px,
-        xxl: 1170px,
+        xl: 1140px,
+        xxl: 1200px
 );
-$primary: #0c6452;
+$primary: #067e69;
+$secondary: #ff862c;
 $success: #0c6452;
 $danger: #ae1421;
 $light: $gray-100;
@@ -43,6 +44,9 @@ $dark: $gray-900;
 
 $btn-padding-x: 20px;
 $enable-negative-margins: true;
+$navbar-light-hover-color: $primary;
+$navbar-light-active-color: $primary;
+
 @import "~bootstrap/scss/bootstrap";
 .btn-primary, .button{
   &:hover {
@@ -53,19 +57,16 @@ $enable-negative-margins: true;
   }
 }
 
-body, .fs-14 {
-  font-size: 14px;
-  font-family: "bitterregular";
+body {
+  font-size: 15px;
+  font-family: "Poppins";
 }
-
 .fs-12 {
   font-size: 12px;
 }
-
-.fs-18 {
-  font-size: 18px;
+.fs-14 {
+  font-size: 14px;
 }
-
 .header-top-bar-main {
   transition: all 0.5s;
 
@@ -125,8 +126,10 @@ body, .fs-14 {
   }
 }
 
-.middle-bar-main {
-  padding: 15px 0 20px 0;
+.middle-bar {
+  .dgwt-wcas-search-wrapp{
+    max-width: 100%;
+  }
 }
 
 .top-cart-content {
@@ -163,16 +166,6 @@ body, .fs-14 {
         }
       }
     }
-  }
-
-  .mega-menu-title:after {
-    content: '';
-    height: 0;
-    border-bottom: 10px solid rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
-    border-right: 10px solid transparent;
-    position: absolute;
-    right: -10px;
-    top: 0;
   }
 
   .all-cate-text {
@@ -225,21 +218,8 @@ body, .fs-14 {
   }
 }
 
-.dgwt-wcas-has-submit {
-  .dgwt-wcas-search-submit {
-    svg {
-      path {
-        fill: #000;
-      }
-    }
-  }
-}
-
 .dgwt-wcas-sf-wrapp {
   button.dgwt-wcas-search-submit {
-    background-color: #fff;
-    border: 1px solid #ddd;
-
     &::before {
       display: none;
     }
@@ -341,12 +321,40 @@ footer {
       padding: 0;
       list-style-type: none;
       li {
+        &.current-menu-item {
+          a {
+            color: $secondary;
+          }
+        }
         a {
           color: #fff;
-          padding: 5px 0;
+          padding: 6px 0;
           text-decoration: none;
           display: inline-block;
-          font-size: 13px;
+          font-size: 15px;
+          &:hover {
+            color: $secondary;
+          }
+        }
+      }
+    }
+    .wp-block-social-links {
+      display: flex;
+      gap: 1rem;
+      li {
+        a {
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+          &:hover {
+            svg {
+              path {
+                fill: $primary;
+              }
+            }
+          }
         }
       }
     }
@@ -440,7 +448,6 @@ footer {
         li {
           a {
             color: #fff;
-            padding: 0.8rem 0;
             text-decoration: none;
             display: inline-block;
             font-size: 13px;

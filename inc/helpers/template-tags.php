@@ -310,32 +310,30 @@ if ( ! function_exists( 'asgard_mini_cart' ) ) {
 
         <div class="mini-cart m-0 text-start">
             <div data-hover="dropdown" class="basket fs-14 p-0 d-flex align-items-center justify-content-end">
-                <a href="https://api.whatsapp.com/send?phone=18779251112&text=Hi,%20Arrowmeds,%20Team" target="_blank" class="whatsapp-icon d-block d-sm-block d-md-none d-lg-none d-xl-none d-xxl-none me-3">
-                    <svg height="25" width="25" fill="#42D741">
-                        <use href="#icon-whatsapp"></use>
-                    </svg>
-                </a>
+                <div class="header-whatsapp me-2 me-md-4">
+                    <a href="https://api.whatsapp.com/send?phone=61731032369" target="_blank"><svg class="" width="32px" height="32px" fill="#067e69"><use href="#icon-whatsapp"></use></svg></a>
+                </div>
                 <a href="<?php echo esc_url( wc_get_cart_url() ); ?>"
-                   class="m-0 d-flex text-decoration-none align-items-center">
-                    <button type="button"
-                            class="btn btn-primary bg-primary position-relative p-0 rounded-circle cart-icon-button">
-                        <svg class="" width="28px" height="28px">
-                            <use href="#icon-bag"></use>
+                   class="m-0 d-flex text-decoration-none align-items-center"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                    <div type=""
+                         class="position-relative p-0 cart-icon-button d-flex justify-content-center align-items-center h-auto w-auto">
+                        <svg class="" width="32px" height="32px" fill="#067e69">
+                            <use href="#icon-basket"></use>
                         </svg>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light rounded-circle d-block d-sm-block d-md-none d-lg-none">
-                            <?php echo esc_html( $woocommerce->cart->cart_contents_count ); ?> <span
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success border border-light rounded-circle d-block d-sm-block d-md-block d-lg-block">
+														<?php echo esc_html( $woocommerce->cart->cart_contents_count ); ?> <span
                                     class="visually-hidden">New alerts</span>
-                        </span>
-                    </button>
-                    <div class="cart-text ms-2">
-                        <span class="price hidden-xs text-uppercase d-block fs-14 text-black lh-1 d-none d-sm-none d-md-none d-lg-block"><?php esc_attr_e( 'Shopping Cart', 'asgard' ); ?></span>
-                        <span class="cart_count hidden-xs fs-12 text-black text-body-tertiary d-none d-sm-none d-md-block d-lg-block"><?php echo esc_html( $woocommerce->cart->cart_contents_count ); ?> <?php esc_attr_e( 'Items', 'asgard' ); ?>/ <?php echo wp_specialchars_decode( WC()->cart->get_cart_subtotal() ); ?></span>
+												</span>
+                    </div>
+                    <div class="cart-text ms-2 d-none">
+                        <span class="price hidden-xs text-uppercase d-none fs-14 text-black lh-1 d-none d-sm-none d-md-none d-lg-none"><?php esc_attr_e( 'Shopping Cart', 'asgard' ); ?></span>
+                        <span class="cart_count hidden-xs fs-14 text-black text-body-tertiary d-none d-sm-none d-md-none d-lg-flex flex-column-reverse"><?php echo esc_html( $woocommerce->cart->cart_contents_count ); ?> <?php esc_attr_e( 'Items', 'asgard' ); ?> <?php echo wp_specialchars_decode( WC()->cart->get_cart_subtotal() ); ?></span>
                     </div>
                 </a>
             </div>
 
             <div>
-                <div class="top-cart-content position-absolute shadow bg-white rounded end-0 top-100 border border-success border-opacity-10">
+                <div class="top-cart-content position-absolute shadow bg-white rounded end-0 top-100 border border-success border-opacity-10 d-none">
 					<?php if ( sizeof( WC()->cart->get_cart() ) > 0 ) : $i = 0; ?>
                         <ul class="mini-products-list px-3 list-unstyled pt-3 mb-0 position-relative ms-0" id="cart-sidebar">
 							<?php foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) : ?>
@@ -587,3 +585,151 @@ function asgard_get_completed_orders_before_after($date_one, $date_two) {
 if (!wp_next_scheduled('asgard_add_every_seven_days')) {
 	wp_schedule_event(time(), 'every_seven_days', 'asgard_add_every_seven_days');
 }
+
+if ( ! function_exists ( 'asgard_canvas_right_cart' ) ) {
+	function asgard_canvas_right_cart() {
+		global $woocommerce;
+		?>
+        <div class="offcanvas offcanvas-end asgard_canvas_right_cart-main" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header border-bottom border-primary border-opacity-25">
+                <h5 class="offcanvas-title text-success" id="offcanvasRightLabel">Shopping Cart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div class="right_cart-main d-flex flex-column justify-content-between h-100">
+                    <div class="right_cart-up">
+						<?php if ( sizeof( WC()->cart->get_cart() ) > 0 ) : $i = 0; ?>
+                            <ul class="mini-products-list list-unstyled mb-0 position-relative ms-0" id="cart-sidebar">
+								<?php foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) : ?>
+									<?php
+									$_product              = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+									$product_id            = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
+
+									if ( $_product && $_product->exists() && $cart_item['quantity'] > 0
+									     && apply_filters( 'woocommerce_widget_cart_item_visible', true, $cart_item, $cart_item_key )
+									) :
+
+										$product_name = apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key );
+										$thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key );
+										$product_price     = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
+										$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
+										$cnt               = sizeof( WC()->cart->get_cart() );
+										$rowstatus         = $cnt % 2 ? 'odd' : 'even';
+										?>
+                                        <li class="item<?php if ( $cnt - 1 == $i ) { ?>last<?php } ?> d-inline-block border-bottom borderColorLight p-3 w-100">
+                                            <div class="item-inner d-flex">
+                                                <a class="product-image flex-shrink-0 border border-primary border-opacity-25"
+                                                   href="<?php echo esc_url( $product_permalink ); ?>"
+                                                   title="<?php echo esc_html( $product_name ); ?>"> <?php echo str_replace( array(
+														'http:',
+														'https:'
+													), '', wp_specialchars_decode( $thumbnail ) ); ?> </a>
+
+
+                                                <div class="product-details flex-grow-1 ms-3 position-relative">
+                                                    <div class="access d-flex justify-content-end position-absolute top-0 end-0 ">
+                                                        <a class="btn-edit"
+                                                           title="<?php esc_attr_e( 'Edit item', 'asgard' ); ?>"
+                                                           href="<?php echo esc_url( wc_get_cart_url() ); ?>">
+                                                            <svg class="icon-pencil" width="12" height="12">
+                                                                <use href="#icon-pencil"></use>
+                                                            </svg>
+                                                            <span
+                                                                    class="hidden d-none"><?php esc_attr_e( 'Edit item', 'asgard' ); ?></span></a>
+                                                        <a href="<?php echo esc_url( wc_get_cart_remove_url( $cart_item_key ) ); ?>"
+                                                           title="<?php esc_attr_e( 'Remove This Item', 'asgard' ); ?>"
+                                                           onClick=""
+                                                           class="btn-remove1 ms-3">
+                                                            <svg class="icon-close" width="12" height="12">
+                                                                <use href="#icon-close"></use>
+                                                            </svg>
+                                                        </a>
+
+                                                    </div>
+                                                    <strong><?php echo esc_html( $cart_item['quantity'] ); ?>
+                                                    </strong> x <span
+                                                            class="price"><?php echo wp_specialchars_decode( $product_price ); ?></span>
+                                                    <p class="product-name mb-0"><a
+                                                                class="text-decoration-none fs-12 link-primary "
+                                                                href="<?php echo esc_url( $product_permalink ); ?>"
+                                                                title="<?php echo esc_html( $product_name ); ?>"><?php echo esc_html( $product_name ); ?></a>
+                                                    </p>
+                                                </div>
+												<?php echo wc_get_formatted_cart_item_data( $cart_item ); ?>
+
+                                            </div>
+
+                                        </li>
+									<?php endif; ?>
+									<?php $i ++; endforeach; ?>
+                            </ul>
+						<?php else: ?>
+                            <p class="a-center noitem p-2 text-center">
+                                <svg class="d-block mx-auto m-3" width="28" height="28" fill="#ccc">
+                                    <use href="#icon-cart"></use>
+                                </svg>
+								<?php esc_attr_e( 'No products in the cart.', 'asgard' ); ?>
+                            </p>
+						<?php endif; ?>
+                    </div>
+                    <div class="right_cart-down border-top border-primary border-opacity-25 pb-3">
+                        <!--actions-->
+                        <div class="right_cart-subtotle d-flex justify-content-between align-items-center p-3">
+                            <h5 class="right_cart-subtotle-left text-primary mb-0">
+                                SUBTOTAL:
+                            </h5>
+                            <div class="right_cart-subtotle-right">
+								<?php echo wp_specialchars_decode( WC()->cart->get_cart_subtotal() ); ?>
+                            </div>
+                        </div>
+                        <div class="actions d-flex justify-content-center px-3 flex-column gap-2">
+                            <button class="btn-checkout btn btn-dark order-2 mx-1 text-uppercase fs-16"
+                                    title="<?php esc_attr_e( 'Checkout', 'asgard' ); ?>"
+                                    type="button"
+                                    onClick="window.location.assign('<?php echo esc_js( wc_get_checkout_url() ); ?>')">
+                                <svg width="20" height="20" fill="#fff" class="me-1">
+                                    <use href="#icon-check"></use>
+                                </svg>
+                                <span><?php esc_attr_e( 'Checkout', 'asgard' ); ?></span></button>
+                            <a class="view-cart btn btn-success order-1 mx-1 text-decoration-none text-uppercase fs-16"
+                               type="button"
+                               onClick="window.location.assign('<?php echo esc_js( wc_get_cart_url() ); ?>')">
+                                <svg width="20" height="20" fill="#fff" class="me-1">
+                                    <use href="#icon-cart"></use>
+                                </svg>
+                                <span><?php esc_attr_e( 'View Cart', 'asgard' ); ?></span> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<?php
+	}
+}
+
+if( ! function_exists('extractPhoneNumber')) {
+	function extractPhoneNumber($text) {
+		// Remove all characters except digits
+		$phoneNumber = preg_replace("/[^0-9]/", "", $text);
+
+		return $phoneNumber;
+	}
+}
+if( ! function_exists('extractAndCreateWhatsAppLink')) {
+	function extractAndCreateWhatsAppLink($text) {
+		// Remove all characters except digits
+		$phoneNumber = preg_replace("/[^0-9]/", "", $text);
+
+		// Check if the phone number starts with a country code
+		if (substr($phoneNumber, 0, 2) == '61') {
+			// Remove the country code (assuming Australian number)
+			$phoneNumber = substr($phoneNumber, 2);
+		}
+
+		// Create the WhatsApp API link
+		$whatsappLink = 'https://api.whatsapp.com/send?phone=61' . $phoneNumber;
+
+		return $whatsappLink;
+	}
+}
+

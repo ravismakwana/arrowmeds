@@ -33,6 +33,8 @@ class ASGARD_THEME {
 	protected function setup_hooks() {
 		// actions and filters
 		add_action('after_setup_theme', [$this, 'setup_theme']);
+		add_action( 'wp_head', [$this, 'ga_head_code'] );
+		add_action( 'wp_body_open', [$this, 'ga_body_code'] );
 	}
 
 	public function setup_theme(){
@@ -60,7 +62,7 @@ class ASGARD_THEME {
 
 		/** post thumbnail **/
 		add_theme_support( 'post-thumbnails' );
-		add_image_size('featured-thumbnail', 350, 233, true);
+		add_image_size('featured-thumbnail', 514, 206, true);
 
 		/** Feed Links **/
 		add_theme_support( 'automatic-feed-links' );
@@ -92,4 +94,19 @@ class ASGARD_THEME {
 
 	}
 
+	public function ga_head_code(){
+		?>
+		<!-- Google Tag Manager -->
+
+		<!-- End Google Tag Manager -->
+		<?php
+	}
+
+	public function ga_body_code(){
+        ?>
+        <!-- Google Tag Manager (noscript) -->
+
+        <!-- End Google Tag Manager (noscript) -->
+        <?php
+    }
 }

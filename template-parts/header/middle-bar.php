@@ -9,7 +9,7 @@
 $menu_class = \ASGARD_THEME\Inc\Menus::get_instance();
 $header_menu_id = $menu_class->get_menu_id('asgard-main-menu');
 ?>
-<div class="middle-bar mt-2 mb-3">
+<div class="middle-bar py-3 border-top border-bottom border-opacity-10 border-success">
     <div class="container">
         <div class="row d-flex justify-content-between align-items-center">
             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 logo-block">

@@ -9,14 +9,14 @@ get_header();
 
 ?>
     <div id="primary">
-        <main id="main" class="site-main my-5" role="main">
+        <main id="main" class="site-main mb-5" role="main">
             <div class="container">
 
                 <header class="page-header">
 					<?php
 					if ( ! empty( single_term_title( '', false ) ) ) {
 						printf(
-							'<h1 class="page-title">%s</h1>',
+							'<h1 class="page-title my-3 h3 fw-bold">Category: %s</h1>',
 							single_term_title( '', false )
 						);
 					}
@@ -31,7 +31,7 @@ get_header();
 						<?php
 						if ( have_posts() ) :
 							while ( have_posts() ) : the_post();
-								get_template_part( 'template-parts/content', '', [ 'container_classes' => 'col-lg-6 col-md-6 col-sm-12 pb-4' ] );
+								get_template_part( 'template-parts/content', '', [ 'container_classes' => 'mt-0 col-lg-4 col-md-6 col-sm-12 pb-3 pb-sm-4' ] );
 							endwhile;
 						else :
 							get_template_part( 'template-parts/content-none' );
